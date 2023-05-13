@@ -28,19 +28,19 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
-        boolean hasLogin = sharedPreferences.getBoolean("login", false);
-        if (hasLogin){
-            usr = sharedPreferences.getString("username", "");
-            pwd = sharedPreferences.getString("password", "");
-            HTTPRequest loginRequest = new HTTPRequest();
-            loginRequest.addParam("username", usr);
-            loginRequest.addParam("password", pwd);
-            loginRequest.post(loginUrl, loginCallback);
-        }
+//        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+//        boolean hasLogin = sharedPreferences.getBoolean("login", false);
+//        if (hasLogin){
+//            usr = sharedPreferences.getString("username", "");
+//            pwd = sharedPreferences.getString("password", "");
+//            HTTPRequest loginRequest = new HTTPRequest();
+//            loginRequest.addParam("username", usr);
+//            loginRequest.addParam("password", pwd);
+//            loginRequest.post(loginUrl, loginCallback);
+//        }
     }
 
     public void onRegisterClick(View v){
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putString("username", usr);
                 editor.putString("password", pwd);
                 editor.apply();
-                Intent intent = new Intent(context, SuccessActivity.class);
+                Intent intent = new Intent(context, MainActivity.class);
                 intent.putExtra("username", usr);
                 startActivity(intent);
             }
