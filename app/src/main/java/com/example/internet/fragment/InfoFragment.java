@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -30,6 +31,10 @@ public class InfoFragment extends Fragment {
 
     @BindView(R.id.following)
     LinearLayout following_button;
+
+    @BindView(R.id.img_avatar)
+    ImageView img_avatar;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,10 +47,9 @@ public class InfoFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_info, container, false);
 
         ButterKnife.bind(this, rootView);
-        ImageView imageView = rootView.findViewById(R.id.img_avatar);
         String base64Image = Global.base64Test.split(",")[1];
         byte[] imageAsBytes = Base64.decode(base64Image.getBytes(), Base64.DEFAULT);
-        imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+        img_avatar.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
 
 
         Context ctx = getActivity();
