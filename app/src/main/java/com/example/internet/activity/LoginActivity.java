@@ -26,12 +26,14 @@ import okhttp3.Response;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText username, password;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        username = findViewById(R.id.username);
-        password = findViewById(R.id.password);
+        username = findViewById(R.id.login_account);
+        password = findViewById(R.id.login_password);
 //        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
 //        boolean hasLogin = sharedPreferences.getBoolean("login", false);
 //        if (hasLogin){

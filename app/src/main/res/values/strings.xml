@@ -1,3 +1,97 @@
 <resources>
     <string name="app_name">Internet</string>
+
+    <string name="title_home">首页</string>
+
+    <string name="title_dashboard">我的</string>
+
+    <string name="title_notifications">通知</string>
+
+    <string name="title_query">搜索</string>
+
+    <string name="title_conversations">会话</string>
+
+    <string name="title_follow">关注</string>
+
+    <string name="INTRODUCE">介绍</string>
+
+    <string name="LOGIN">登录</string>
+
+    <string name="LOGON">注册</string>
+
+    <string name="SAVE">保存</string>
+
+    <string name="VERIFY">验证</string>
+
+    <string name="ACCOUNT">账号</string>
+
+    <string name="CELLPHONE">手机号</string>
+
+    <string name="GET_VERIFICATION_CODE">获取验证码</string>
+
+    <string name="VERIFICATION_CODE">验证码</string>
+
+    <string name="PASSWORD">密码</string>
+
+    <string name="OLD_PASSWORD">旧密码</string>
+
+    <string name="NEW_PASSWORD">新密码</string>
+
+    <string name="RESET_PASSWORD">修改密码</string>
+
+    <string name="REPEAT_PASSWORD">重复密码</string>
+
+    <string name="FORGET_PASSWORD">忘记密码</string>
+
+    <string name="TYPE">类型</string>
+
+    <string name="NAME">姓名</string>
+
+    <string name="GENDER">性别</string>
+
+    <string name="SCHOOL">学校</string>
+
+    <string name="DEPARTMENT">院系</string>
+
+    <string name="TS_NUMBER">工号/学号</string>
+
+    <string name="ID_NUMBER">身份证号</string>
+
+    <string name="WATCH">关注</string>
+
+    <string name="STOP_WATCH">取消关注</string>
+
+    <string name="HOT_SEARCH">热门搜索</string>
+
+    <string name="HISTORY_SEARCH">搜索历史</string>
+
+    <string name="TEST">测试</string>
+
+    <string name="tab_1">These are the top stories:</string>
+
+    <string name="INFO">通知</string>
+
+    <string name="CHAT">会话</string>
+
+    <string name="INFO_LIST">通知列表</string>
+
+    <string name="CHAT_LIST">会话列表</string>
+
+    <string name="ALL_READ">全标已读</string>
+
+    <string name="PERSONAL_INFO">个人信息</string>
+
+    <string name="RECRUITMENT">招生意向</string>
+
+    <string name="APPLICATION">申请意向</string>
+
+    <string name="CANNOT_BE_NULL">该项不能为空</string>
+
+    <string name="TUTOR">导师</string>
+
+    <string name="STUDENT">学生</string>
+
+    <string name="FOLLOWER">粉丝</string>
+
+    <string name="ORDER">排序</string>
 </resources>

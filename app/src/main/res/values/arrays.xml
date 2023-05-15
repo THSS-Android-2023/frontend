@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="orderArray">
+        <item>默认</item>
+        <item>按关注人数</item>
+    </string-array>
+    <string-array name="view_types_dialog">
+        <item name="image">图片</item>
+    </string-array>
+
+    <string-array name="t_s_type">
+        <item name="teacher">导师</item>
+        <item name="student">学生</item>
+    </string-array>
+
+</resources>
