@@ -1,22 +1,18 @@
-package com.example.internet.adapter;
-
+package com.example.internet.adapter.pager;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.internet.activity.LoginActivity;
+import com.example.internet.activity.RegisterActivity;
 import com.example.internet.fragment.BlankFragment;
+import com.example.internet.fragment.HomepageFragment;
+import com.example.internet.fragment.InfoFragment;
 
-/**
- * A [FragmentPagerAdapter] that returns a fragment corresponding to
- * one of the sections/tabs/pages.
- */
-public class HomeTabPagerAdapter extends FragmentStateAdapter {
-
-
-    public HomeTabPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
-//        mContext = context;
+public class BottomAdapter extends FragmentStateAdapter {
+    public BottomAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
 
@@ -24,12 +20,13 @@ public class HomeTabPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new BlankFragment();
+                return new HomepageFragment();
+            case 3:
+                return new InfoFragment();
             default:
                 return new BlankFragment();
         }
     }
-
     @Override
     public int getItemCount() {
         return 4;
