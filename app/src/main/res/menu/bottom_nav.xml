@@ -4,11 +4,11 @@
         android:title="首页"
         android:icon="@drawable/baseline_home_24"/>
     <item android:id="@+id/bottom_topic"
-        android:title="话题"
-        android:icon="@drawable/baseline_message_24"/>
+        android:title="收藏"
+        android:icon="@drawable/baseline_star_24"/>
     <item android:id="@+id/bottom_guide"
-        android:title="导读"
-        android:icon="@drawable/baseline_menu_book_24"/>
+        android:title="私信"
+        android:icon="@drawable/baseline_message_24"/>
     <item android:id="@+id/bottom_mine"
         android:title="我的"
         android:icon="@drawable/baseline_house_24"/>
