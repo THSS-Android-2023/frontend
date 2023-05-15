@@ -30,9 +30,9 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        username = findViewById(R.id.register_username);
-        password = findViewById(R.id.register_password);
-        password2 = findViewById(R.id.register_password2);
+        username = findViewById(R.id.login_account);
+        password = findViewById(R.id.login_password);
+        password2 = findViewById(R.id.login_repeat_password);
     }
     public void onRegisterClick(View v){
         String usr = username.getText().toString();
