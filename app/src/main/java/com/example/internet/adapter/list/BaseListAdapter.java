@@ -22,8 +22,6 @@ public abstract class BaseListAdapter<T> extends BaseQuickAdapter<T, BaseViewHol
     public void setManager(RecyclerView recyclerView){
         LinearLayoutManager layoutManager = new LinearLayoutManager(m_ctx);
         layoutManager.setSmoothScrollbarEnabled(true);
-        recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
     }
 

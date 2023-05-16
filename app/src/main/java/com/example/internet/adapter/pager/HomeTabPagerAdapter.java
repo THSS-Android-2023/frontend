@@ -24,10 +24,10 @@ public class HomeTabPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
-            case 0:
-                return new TimelineFragment();
             default:
-                return new BlankFragment();
+                return new TimelineFragment();
+//            default:
+//                return new BlankFragment();
         }
     }
 

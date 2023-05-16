@@ -1,26 +1,37 @@
 package com.example.internet.fragment.home;
 
+import android.content.Context;
+import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.internet.R;
+import com.example.internet.activity.SearchActivity;
 import com.example.internet.adapter.list.TimelineListAdapter;
 import com.example.internet.model.TimelineModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+
 public class TimelineFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<TimelineModel> data;
     private TimelineListAdapter adapter;
+
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +56,9 @@ public class TimelineFragment extends Fragment {
         });
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);
+
+
+
         return rootView;
     }
 

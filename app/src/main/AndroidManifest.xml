@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.EditInfoActivity"/>
+        <activity android:name=".activity.EditInfoActivity"></activity>
         <activity android:name=".activity.MainActivity"></activity>
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
@@ -28,6 +28,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
+
+        <activity android:name=".activity.SearchActivity"></activity>
+        <activity android:name=".activity.FollowingActivity"
+            android:parentActivityName=".activity.MainActivity">
+        </activity>
+
+        <activity android:name=".activity.ChattingActivity"></activity>
+
     </application>
 
 </manifest>
