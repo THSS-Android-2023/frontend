@@ -14,6 +14,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".activity.EditInfoActivity"></activity>
+        <activity android:name=".activity.EditMomentActivity"></activity>
         <activity android:name=".activity.MainActivity"></activity>
         <activity android:name=".activity.LoginActivity"
             android:exported="true">

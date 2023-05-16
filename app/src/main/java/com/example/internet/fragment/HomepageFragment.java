@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.internet.R;
+import com.example.internet.activity.EditMomentActivity;
 import com.example.internet.activity.NotificationActivity;
 import com.example.internet.activity.SearchActivity;
 import com.example.internet.adapter.pager.HomeTabPagerAdapter;
@@ -41,6 +42,7 @@ public class HomepageFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
 
     @Override
     public View onCreateView(

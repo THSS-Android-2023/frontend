@@ -1,8 +1,10 @@
 package com.example.internet.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 
 import androidx.annotation.NonNull;
@@ -52,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+    public void editMoment(View v){
+
+        Intent intent = new Intent(this, EditMomentActivity.class);
+        startActivity(intent);
     }
 
 
