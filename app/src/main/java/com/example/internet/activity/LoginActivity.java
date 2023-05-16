@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
             int statusCode = response.code();
             if (statusCode == 401){
-                ErrorDialog error = new ErrorDialog(context, "密码不正确");
+                ErrorDialog error = new ErrorDialog(context, "账号/密码不正确");
             } else if (statusCode == 200) {
                 SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
