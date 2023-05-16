@@ -10,6 +10,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.internet.R;
+import com.example.internet.activity.EditInfoActivity;
 import com.example.internet.activity.FollowingActivity;
 import com.example.internet.util.Global;
 import com.squareup.picasso.Picasso;
@@ -25,6 +27,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class InfoFragment extends Fragment {
+
+    Button edit_button;
 
     @BindView(R.id.follower)
     LinearLayout follower_button;
@@ -56,11 +60,24 @@ public class InfoFragment extends Fragment {
         following_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(ctx, FollowingActivity.class);
                 startActivity(intent);
             }
         });
+
+
+        edit_button = rootView.findViewById(R.id.edit_button);
+        edit_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getActivity(), EditInfoActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
         return rootView;
     }
+
 }

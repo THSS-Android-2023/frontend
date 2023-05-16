@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avatar_edit"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="20dp"
+        android:clickable="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/baseline_person_24" />
+
+    <TextView
+        android:id="@+id/username_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/avatar_edit"
+        android:layout_alignStart="@id/avatar_edit"
+        android:text="用户名："
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/username_edit"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/avatar_edit"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="150dp"
+        android:text="Chaton Xu"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/intro_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/username_edit"
+        android:layout_alignStart="@id/username_text"
+        android:text="简介："
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/intro_edit"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/username_edit"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="150dp"
+        android:text="I am a hard-working cat."
+        android:textSize="20sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/intro_edit"
+
+        android:layout_marginTop="40dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/edit_password_button"
+            android:layout_width="128dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/shape_login_button"
+            android:padding="15dp"
+            android:shadowColor="@android:color/transparent"
+            android:text="@string/RESET_PASSWORD"
+            android:textSize="16sp" />
+        <Button
+            android:id="@+id/edit_button"
+            android:layout_width="128dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/shape_login_button"
+            android:padding="15dp"
+            android:shadowColor="@android:color/transparent"
+            android:text="@string/SAVE"
+            android:textSize="16sp"
+            android:onClick="onSaveClick"/>
+    </LinearLayout>
+
+
+</RelativeLayout>
