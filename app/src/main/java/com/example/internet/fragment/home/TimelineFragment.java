@@ -15,10 +15,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.internet.R;
+import com.example.internet.activity.DetailsActivity;
 import com.example.internet.activity.SearchActivity;
 import com.example.internet.adapter.list.TimelineListAdapter;
 import com.example.internet.model.TimelineModel;
+import com.google.gson.Gson;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +56,11 @@ public class TimelineFragment extends Fragment {
         adapter = new TimelineListAdapter(data, getContext());
         adapter.setOnItemClickListener((adapter, view, position) -> {
             Log.d("123", "Clicked on " + position);
+            Gson gson = new Gson();
+            String jsonString = gson.toJson(data.get(position));
+            Intent intent = new Intent(getActivity(), DetailsActivity.class);
+            intent.putExtra("timelineModelJson", jsonString);
+            startActivity(intent);
         });
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);
