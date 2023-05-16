@@ -1,35 +1,41 @@
 package com.example.internet.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.internet.R;
 import com.example.internet.util.ErrorDialog;
+import com.example.internet.util.HTTPRequest;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.Objects;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class EditInfoActivity extends AppCompatActivity {
 
     private ImageView avatar_image;
+    private EditText username_edit;
+    private EditText intro_edit;
     private String mSharedImg;
     private Uri imageUri = null;
     private static final int SELECT_PHOTO = 100;
@@ -60,10 +66,9 @@ public class EditInfoActivity extends AppCompatActivity {
             }
         });
 
-
-//        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.avatar1);
-//        String encodedImage = encodeImageToBase64(image);
-//        Log.d("img2base64", encodedImage);
+        username_edit = findViewById(R.id.username_edit);
+        intro_edit = findViewById(R.id.intro_edit);
+        
     }
 
     @Override
@@ -115,7 +120,58 @@ public class EditInfoActivity extends AppCompatActivity {
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
+    public void onSaveClick(View v){
+        String usr = username_edit.getText().toString();
+        String intro = intro_edit.getText().toString();
 
+        avatar_image.setDrawingCacheEnabled(true);
+        avatar_image.buildDrawingCache();
+        Bitmap avatar_bitmap = Bitmap.createBitmap(avatar_image.getDrawingCache());
+        avatar_image.setDrawingCacheEnabled(false);
+
+//        int width = avatar_bitmap.getWidth();
+//        int height = avatar_bitmap.getHeight();
+//        Log.d("width", width + "");
+//        Log.d("height", height + "");
+
+        String avatar_base64 = encodeImageToBase64(avatar_bitmap);
+
+        if(usr.isEmpty()){
+            ErrorDialog error = new ErrorDialog(this, "用户名不能为空");
+            return;
+        }
+        try{
+            String saveUrl = "http://129.211.216.10:5000/login/";
+            Callback saveCallback = new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    Log.d("Error", e.toString());}
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+                    String resStr = Objects.requireNonNull(response.body()).string();
+                    int code = response.code();
+                    Log.d("code", String.valueOf(code));
+                    try {
+                        JSONObject jsonObject = new JSONObject(resStr);
+                        Boolean status = jsonObject.getBoolean("status");
+                    }
+                    catch (JSONException e){
+                        Log.d("Error", e.toString());
+                    }
+                    finish();
+                }
+            };
+            HTTPRequest saveRequest = new HTTPRequest();
+            saveRequest.addParam("username", usr);
+            saveRequest.addParam("intro", intro);
+            saveRequest.addParam("avatar", avatar_base64);
+            saveRequest.post(saveUrl, saveCallback);
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 
 }

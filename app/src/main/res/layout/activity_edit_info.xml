@@ -84,7 +84,8 @@
             android:padding="15dp"
             android:shadowColor="@android:color/transparent"
             android:text="@string/SAVE"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:onClick="onSaveClick"/>
     </LinearLayout>
 
 
