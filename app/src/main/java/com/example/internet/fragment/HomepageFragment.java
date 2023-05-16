@@ -15,6 +15,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.internet.R;
+import com.example.internet.activity.EditMomentActivity;
+import com.example.internet.activity.NotificationActivity;
 import com.example.internet.activity.SearchActivity;
 import com.example.internet.adapter.pager.HomeTabPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
@@ -27,6 +29,9 @@ public class HomepageFragment extends Fragment {
     @BindView(R.id.search_icon)
     ImageView searchIcon;
 
+    @BindView(R.id.notification_icon)
+    ImageView notificationIcon;
+
     @BindView(R.id.tabs)
     TabLayout tabs;
 
@@ -37,6 +42,7 @@ public class HomepageFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
 
     @Override
     public View onCreateView(
@@ -70,6 +76,15 @@ public class HomepageFragment extends Fragment {
             public void onClick(View v) {
                 // 创建一个 Intent 对象，指定要跳转的目标 Activity
                 Intent intent = new Intent(ctx, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        notificationIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 创建一个 Intent 对象，指定要跳转的目标 Activity
+                Intent intent = new Intent(ctx, NotificationActivity.class);
                 startActivity(intent);
             }
         });
