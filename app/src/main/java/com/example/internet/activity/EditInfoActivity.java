@@ -6,6 +6,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -33,6 +34,10 @@ import okhttp3.Response;
 
 public class EditInfoActivity extends AppCompatActivity {
 
+    private String username;
+    private String introduction;
+    private String avatar_base64;
+
     private ImageView avatar_image;
     private EditText username_edit;
     private EditText intro_edit;
@@ -46,6 +51,11 @@ public class EditInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_info);
 
+        Intent intent = getIntent();
+        username = intent.getStringExtra("username");
+        introduction = intent.getStringExtra("intro");
+        avatar_base64 = intent.getStringExtra("avatar");
+
         if (checkSelfPermission(
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -57,6 +67,9 @@ public class EditInfoActivity extends AppCompatActivity {
 
         avatar_image = findViewById(R.id.avatar_edit);
 
+        byte[] imageAsBytes = Base64.decode(avatar_base64.getBytes(), Base64.DEFAULT);
+        avatar_image.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+
         avatar_image.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -67,8 +80,11 @@ public class EditInfoActivity extends AppCompatActivity {
         });
 
         username_edit = findViewById(R.id.username_edit);
+        username_edit.setText(username);
+
         intro_edit = findViewById(R.id.intro_edit);
-        
+        intro_edit.setText(introduction);
+
     }
 
     @Override
@@ -171,6 +187,12 @@ public class EditInfoActivity extends AppCompatActivity {
         catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void onResetPasswordClick(View view) {
+        Intent intent = new Intent(this, ResetPasswordActivity.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
     }
 
 

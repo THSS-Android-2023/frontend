@@ -16,6 +16,7 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        username = getIntent().getStringExtra("username");
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNav);
 
@@ -54,5 +57,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public String getUsername() {
+        return username;
+    }
 
 }
