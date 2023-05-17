@@ -3,6 +3,7 @@ package com.example.internet.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -19,6 +20,7 @@ import com.google.android.material.navigation.NavigationBarView;
 public class MainActivity extends AppCompatActivity {
 
     private String username;
+    public String jwt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         username = getIntent().getStringExtra("username");
+        jwt = getIntent().getStringExtra("jwt");
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNav);
 

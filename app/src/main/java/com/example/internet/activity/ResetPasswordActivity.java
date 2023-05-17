@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,11 +12,9 @@ import android.widget.EditText;
 
 import com.example.internet.R;
 import com.example.internet.util.ErrorDialog;
-import com.example.internet.util.HTTPRequest;
+import com.example.internet.request.BaseRequest;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -80,7 +77,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     finish();
                 }
             };
-            HTTPRequest loginRequest = new HTTPRequest();
+            BaseRequest loginRequest = new BaseRequest();
             loginRequest.addParam("username", username);
             loginRequest.addParam("old_password", pwd);
             loginRequest.addParam("new_password", pwd1);
