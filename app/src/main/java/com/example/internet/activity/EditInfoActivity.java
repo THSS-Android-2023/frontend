@@ -165,8 +165,8 @@ public class EditInfoActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
                     String resStr = Objects.requireNonNull(response.body()).string();
-                    int code = response.code();
-                    Log.d("code", String.valueOf(code));
+//                    int code = response.code();
+//                    Log.d("code", String.valueOf(code));
                     try {
                         JSONObject jsonObject = new JSONObject(resStr);
                         Boolean status = jsonObject.getBoolean("status");

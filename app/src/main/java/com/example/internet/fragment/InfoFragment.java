@@ -20,13 +20,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.internet.R;
+import com.example.internet.activity.DetailsActivity;
 import com.example.internet.activity.EditInfoActivity;
 import com.example.internet.activity.FollowingActivity;
 import com.example.internet.activity.MainActivity;
+import com.example.internet.adapter.list.TimelineListAdapter;
+import com.example.internet.model.TimelineModel;
 import com.example.internet.util.Global;
 import com.example.internet.util.HTTPRequest;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +39,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -49,6 +56,10 @@ public class InfoFragment extends Fragment {
     String username;
     String introduction;
     String base64Image;
+
+    private RecyclerView recyclerView;
+    private List<TimelineModel> data;
+    private TimelineListAdapter adapter;
 
     @BindView(R.id.follower)
     LinearLayout follower_button;
@@ -97,7 +108,6 @@ public class InfoFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        updateInfo();
         edit_button = rootView.findViewById(R.id.edit_button);
         edit_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +119,28 @@ public class InfoFragment extends Fragment {
                 startActivityForResult(intent, 0);
             }
         });
+
+        updateInfo();
+
+        recyclerView = rootView.findViewById(R.id.recyclerview);
+
+        data = new ArrayList<>();
+
+        data.add(new TimelineModel("xuhb20", R.drawable.avatar1,"11:05","【打卡美好生活】" , "校园春日即景，还看到了可爱的猫猫~", new int[]{R.drawable.pyq_41, R.drawable.pyq_42, R.drawable.pyq_43}));
+        data.add(new TimelineModel("xuhb20",R.drawable.avatar1, "11:19","【打卡美好生活】" , "和女朋友来吃火锅，看着真不错", new int[]{R.drawable.pyq_1, R.drawable.null_img, R.drawable.null_img}));
+        data.add(new TimelineModel("xuhb20",R.drawable.avatar1,"11:25","【打卡美好生活】" , "喝一杯美式，唤起美好一天~", new int[]{R.drawable.pyq_2, R.drawable.null_img, R.drawable.null_img}));
+        data.add(new TimelineModel("xuhb20", R.drawable.avatar1, "11:49","【打卡美好生活】" , "天津之旅，看到了天津之眼和漂亮的夜景！", new int[]{R.drawable.pyq_31,R.drawable.pyq_32,R.drawable.pyq_33}));
+        adapter = new TimelineListAdapter(data, getContext());
+        adapter.setOnItemClickListener((adapter, view, position) -> {
+            Log.d("123", "Clicked on " + position);
+            Gson gson = new Gson();
+            String jsonString = gson.toJson(data.get(position));
+            Intent intent = new Intent(getActivity(), DetailsActivity.class);
+            intent.putExtra("timelineModelJson", jsonString);
+            startActivity(intent);
+        });
+        adapter.setManager(recyclerView);
+        recyclerView.setAdapter(adapter);
 
 
         return rootView;
@@ -133,15 +165,18 @@ public class InfoFragment extends Fragment {
                 public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
                     String resStr = Objects.requireNonNull(response.body()).string();
                     int code = response.code();
+                    Log.d("in", "in");
                     Log.d("code", String.valueOf(code));
                     try {
                         Log.d("1234", resStr);
                         JSONObject jsonObject = new JSONObject(resStr);
-//                        introduction = jsonObject.getString("intro");
-//                        base64Image = jsonObject.getString("avatar").split(",")[1];;
+                        introduction = jsonObject.getString("intro");
+                        Log.d("1234", introduction);
+//                        base64Image = jsonObject.getString("avatar").split(",")[1];
+//                        Log.d("1234", base64Image);
 //                        byte[] imageAsBytes = Base64.decode(base64Image.getBytes(), Base64.DEFAULT);
 //                        img_avatar.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
-//                        username_textview.setText(username);
+                        intro_textview.setText(introduction);
                     }
                     catch (JSONException e){
                         Log.d("Error", e.toString());
