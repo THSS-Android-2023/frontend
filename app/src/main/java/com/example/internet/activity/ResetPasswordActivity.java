@@ -59,7 +59,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
             return;
         }
         try{
-            String resetPasswordUrl = "http://129.211.216.10:5000/login/register/";
+            String resetPasswordUrl = "http://129.211.216.10:5000/login/change_password/";
             Callback resetPasswordCallback = new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {

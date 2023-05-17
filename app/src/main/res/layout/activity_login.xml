@@ -9,12 +9,13 @@
     android:orientation="vertical"
     android:padding="20dp">
 
+
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="-100dp"
+        android:layout_width="400dp"
+        android:layout_height="200dp"
         app:srcCompat="@drawable/png_logo" />
-
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/login_account_layout"
@@ -22,7 +23,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/ACCOUNT"
         android:layout_margin="10dp"
-        app:hintTextColor="@color/white"
+        android:textColorHint="@color/white"
         app:boxBackgroundMode="outline"
         app:endIconMode="clear_text">
 
@@ -46,10 +47,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/PASSWORD"
+        android:textColorHint="@color/white"
         android:layout_margin="10dp"
         app:passwordToggleEnabled="true"
         app:errorEnabled="true"
-        app:hintTextColor="@color/white"
         app:boxBackgroundMode="outline">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -102,7 +103,7 @@
             android:padding="4dp"
             android:shadowColor="@android:color/transparent"
             android:text="@string/INTRODUCE"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/logon"
@@ -119,7 +120,7 @@
             android:padding="4dp"
             android:shadowColor="@android:color/transparent"
             android:text="@string/LOGON"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:onClick="onRegisterClick"/>
     </RelativeLayout>
 
