@@ -157,7 +157,7 @@ public class EditInfoActivity extends AppCompatActivity {
             return;
         }
         try{
-            String saveUrl = "http://129.211.216.10:5000/login/";
+            String saveUrl = "http://129.211.216.10:5000/login/change_info/";
             Callback saveCallback = new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
