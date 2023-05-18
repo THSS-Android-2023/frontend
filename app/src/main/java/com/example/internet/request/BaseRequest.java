@@ -56,8 +56,8 @@ public class BaseRequest {
         OkHttpClient client = new OkHttpClient();
 
         // 添加图片文件到请求体
-        RequestBody imageBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
-        requestBodyBuilder.addFormDataPart("image", imageFile.getName(), imageBody);
+        RequestBody imageBody = RequestBody.create(imageFile ,MediaType.parse("image/jpeg"));
+        requestBodyBuilder.addFormDataPart("file", imageFile.getName(), imageBody);
 
         // 添加其他参数到请求体
         for (HashMap.Entry<String, String> entry : param.entrySet()) {

@@ -45,4 +45,5 @@ dependencies {
     implementation 'com.github.stfalcon-studio:Chatkit:0.4.1'
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'com.zhihu.android:matisse:0.5.3-beta3'
 }
