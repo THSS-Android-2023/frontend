@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ public class FollowingActivity extends AppCompatActivity {
 
     @BindView(R.id.recyclerview)
     RecyclerView recyclerView;
+
     private List<FollowingModel> data;
     private FollowingListAdapter adapter;
 
@@ -44,7 +46,5 @@ public class FollowingActivity extends AppCompatActivity {
         });
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);
-
-
     }
 }
