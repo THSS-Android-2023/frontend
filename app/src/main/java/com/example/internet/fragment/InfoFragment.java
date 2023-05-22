@@ -92,10 +92,12 @@ public class InfoFragment extends Fragment {
             Log.d("in", "in");
             Log.d("code", String.valueOf(code));
             try {
+                Log.d("resStr", resStr);
                 JSONObject jsonObject = new JSONObject(resStr);
                 introduction = jsonObject.getString("intro");
                 intro_textview.setText(introduction);
                 avatar_url = jsonObject.getString("avatar");
+                Log.d("infoFragmentAvatar", avatar_url);
                 if (avatar_url.isEmpty())
                     avatar_url = Global.EMPTY_AVATAR_URL;
                 ctx.runOnUiThread(new Runnable() {
@@ -127,15 +129,10 @@ public class InfoFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         ctx = ((MainActivity) getActivity());
-//        base64Image = Global.base64Test.split(",")[1];
-//        byte[] imageAsBytes = Base64.decode(base64Image.getBytes(), Base64.DEFAULT);
-//        img_avatar.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
-
 
         username = ctx.getUsername();
         username_textview.setText(username);
 
-//        introduction = intro_textview.getText().toString();
 
         new getInfoRequest(updateInfoCallback, ctx.jwt);
 

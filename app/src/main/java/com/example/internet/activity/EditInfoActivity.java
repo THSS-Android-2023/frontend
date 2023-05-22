@@ -24,15 +24,18 @@ import com.example.internet.R;
 import com.example.internet.request.ChangeInfoRequest;
 import com.example.internet.request.UploadAvatarRequest;
 import com.example.internet.util.ErrorDialog;
+import com.example.internet.util.FileUtils;
 import com.example.internet.util.Global;
 import com.example.internet.request.BaseRequest;
 import com.squareup.picasso.Picasso;
+import com.zhihu.matisse.Matisse;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -75,11 +78,10 @@ public class EditInfoActivity extends AppCompatActivity {
             int code = response.code();
             Log.d("code", String.valueOf(code));
             if (code != 200 && code != 201)
-                new ErrorDialog(ctx, "修改失败");
+                new ErrorDialog(ctx, "修改失败：" + response.message());
             try{
-                String resStr = Objects.requireNonNull(response.body()).string();
-                JSONObject jsonObject = new JSONObject(resStr);
-                avatar_url = jsonObject.getString("avatar");
+                avatar_url = response.body().string();
+                Log.d("getUrl", avatar_url);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -153,49 +155,17 @@ public class EditInfoActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK) {
-            Log.d("1","0");
             imageUri = data.getData();
             try {
-                Log.d("1","1");
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-//                mImageView.setImageBitmap(bitmap);
-
-//                getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                Log.d("1",imageUri.toString());
-                String filePath = getFilePathFromUri(imageUri);
-                Log.d("1","3");
-                File imageFile = new File(filePath);
-                Log.d("1","4");
+                String path = FileUtils.getPath(this, imageUri);
+                Log.d("path", path);
+                File imageFile = new File(path);
                 new UploadAvatarRequest(jwt, imageFile, uploadAvatarCallback);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-
-    private String getFilePathFromUri(Uri uri) {
-        String filePath = null;
-        String[] projection = {MediaStore.Images.Media.DATA};
-
-        try {
-            ContentResolver contentResolver = getContentResolver();
-            Cursor cursor = contentResolver.query(uri, projection, null, null, null);
-
-            if (cursor != null) {
-                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                if (cursor.moveToFirst()) {
-                    filePath = cursor.getString(columnIndex);
-                }
-                cursor.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return filePath;
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
