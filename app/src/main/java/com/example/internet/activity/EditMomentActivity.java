@@ -1,6 +1,7 @@
 package com.example.internet.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,21 +10,33 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.internet.R;
 
+import org.commonmark.node.Node;
+
 import java.io.IOException;
+
+import io.noties.markwon.Markwon;
+import io.noties.markwon.editor.MarkwonEditor;
+import io.noties.markwon.editor.MarkwonEditorTextWatcher;
 
 public class EditMomentActivity extends AppCompatActivity {
     private static final int SELECT_PHOTO = 100;
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 101;
+
+    private EditText editText;
+    private TextView textView;
 
     // Name of shared preferences file
     private String sharedPrefFile =
@@ -34,6 +47,8 @@ public class EditMomentActivity extends AppCompatActivity {
     private SharedPreferences mPreferences;
     private Uri imageUri = null;
 
+
+    @SuppressLint("MissingInflatedId")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_moment);
@@ -52,10 +67,10 @@ public class EditMomentActivity extends AppCompatActivity {
         mSharedText = mPreferences.getString("text", "");
         mSharedImg = mPreferences.getString("img","");
 
-        EditText text = findViewById(R.id.et_post_text);
+        editText = findViewById(R.id.et_post_text);
         if (mSharedText != "")
-            text.setText(mSharedText);
-        text.addTextChangedListener(new TextWatcher() {
+            editText.setText(mSharedText);
+        editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -92,6 +107,12 @@ public class EditMomentActivity extends AppCompatActivity {
                 startActivityForResult(photoPickerIntent, SELECT_PHOTO);
             }
         });
+
+        final Markwon markwon = Markwon.create(this);
+        final MarkwonEditor editor = MarkwonEditor.create(markwon);
+        editText.addTextChangedListener(MarkwonEditorTextWatcher.withProcess(editor));
+
+        textView = findViewById(R.id.render_post_text);
     }
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -139,5 +160,23 @@ public class EditMomentActivity extends AppCompatActivity {
         preferencesEditor.putString("text", mSharedText);
         preferencesEditor.putString("img", mSharedImg);
         preferencesEditor.apply();
+    }
+
+    public void onReleaseClick(View view) {
+//        Intent data = new Intent();
+//        data.putExtra("text", mSharedText);
+//        data.putExtra("img", mSharedImg);
+//        setResult(RESULT_OK, data);
+
+        finish();
+    }
+
+    public void onRenderClick(View view) {
+        final Markwon markwon = Markwon.create(this);
+        final Node node = markwon.parse(editText.getText().toString());
+        final Spanned markdown = markwon.render(node);
+
+        markwon.setParsedMarkdown(textView, markdown);
+        Toast.makeText(this, markdown, Toast.LENGTH_LONG).show();
     }
 }

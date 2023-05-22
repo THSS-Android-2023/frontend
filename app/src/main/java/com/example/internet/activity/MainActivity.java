@@ -10,10 +10,12 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.internet.R;
 import com.example.internet.adapter.pager.BottomAdapter;
+import com.example.internet.fragment.home.TimelineFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -65,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, EditMomentActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public String getUsername() {
