@@ -83,7 +83,7 @@ public class BaseRequest {
         for (File imageFile : imageFiles) {
             // 添加图片文件到请求体
             RequestBody imageBody = RequestBody.create(imageFile, MediaType.parse("image/jpeg"));
-            requestBodyBuilder.addFormDataPart("file[]", imageFile.getName(), imageBody);
+            requestBodyBuilder.addFormDataPart("files[]", imageFile.getName(), imageBody);
         }
 
         // 添加其他参数到请求体

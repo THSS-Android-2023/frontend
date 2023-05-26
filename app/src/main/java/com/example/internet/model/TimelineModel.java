@@ -24,7 +24,8 @@ public class TimelineModel {
         this.timestamp = timestamp;
         this.img = img;
 
-        for (int i = 0; i < 9; i++) {
+        int random_num = (int) (Math.random() * 9) + 1;
+        for (int i = 0; i < random_num; i++) {
             imgUris.add("content://com.android.providers.media.documents/document/image%3A31");
         }
     }

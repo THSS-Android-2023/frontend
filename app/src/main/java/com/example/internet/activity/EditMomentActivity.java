@@ -2,6 +2,7 @@ package com.example.internet.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,6 +49,7 @@ import okhttp3.Response;
 public class EditMomentActivity extends AppCompatActivity {
 
     final Context ctx = this;
+    private Dialog mDialog;
     private static final int SELECT_PHOTO = 100;
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 101;
 
@@ -72,18 +74,9 @@ public class EditMomentActivity extends AppCompatActivity {
         protected void onDisplayImage(Context context, ImageView imageView, String photo) {
             assert imageView != null;
             Uri uri = Uri.parse(photo);
-            Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                Log.d("uri", uri.toString());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            imageView.setImageBitmap(bitmap);
-//            Picasso.with(context)
-//                    .load(photo.getSmallUrl)
-//                    .placeholder(R.drawable.ic_default_image)
-//                    .into(imageView);
+            Picasso.get()
+                    .load(uri)
+                    .into(imageView);
         }
 
         @Override
@@ -208,7 +201,7 @@ public class EditMomentActivity extends AppCompatActivity {
                 getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                 uriList.add(imageUri.toString());
-//                nineGridImageView.setImagesData(uriList);
+                nineGridImageView.setImagesData(uriList);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -219,6 +212,10 @@ public class EditMomentActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if (mDialog != null) {
+            mDialog.dismiss();
+            mDialog = null;
+        }
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
         preferencesEditor.putString("text", mSharedText);
         preferencesEditor.putString("img", mSharedImg);
@@ -240,10 +237,11 @@ public class EditMomentActivity extends AppCompatActivity {
             imageFiles.add(imageFile);
         }
         File[] imageFileArray = imageFiles.toArray(new File[0]);
+        Log.d("length", imageFileArray.length + "");
         new PublishMomentRequest("title", mSharedText, "校园资讯", "China",
                 uriList.size(), imageFileArray, publishCallback, jwt);
 
-        finish();
+//        finish();
     }
 
     public void onRenderClick(View view) {
