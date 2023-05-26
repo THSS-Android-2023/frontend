@@ -19,20 +19,45 @@ import com.example.internet.activity.DetailsActivity;
 import com.example.internet.activity.SearchActivity;
 import com.example.internet.adapter.list.TimelineListAdapter;
 import com.example.internet.model.TimelineModel;
+import com.example.internet.util.ErrorDialog;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class TimelineFragment extends Fragment {
+    final Context ctx = getContext();
     private RecyclerView recyclerView;
     private List<TimelineModel> data;
     private TimelineListAdapter adapter;
 
+    Callback uploadAvatarCallback = new Callback() {
+        @Override
+        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+        }
 
+        @Override
+        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+
+            int code = response.code();
+            Log.d("code", String.valueOf(code));
+            if (code != 200 && code != 201)
+                new ErrorDialog(ctx, "获取失败：" + response.message());
+            try{
+
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    };
 
 
     @Override
@@ -46,6 +71,7 @@ public class TimelineFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_timeline, container, false);
         recyclerView = rootView.findViewById(R.id.recyclerview);
+
 
         data = new ArrayList<>();
 

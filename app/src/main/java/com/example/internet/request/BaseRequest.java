@@ -76,6 +76,33 @@ public class BaseRequest {
         client.newCall(request).enqueue(callback);
     }
 
+    public void postMedia(String requestUrl, File[] imageFiles, Callback callback, String jwt) {
+        MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        OkHttpClient client = new OkHttpClient();
+
+        for (File imageFile : imageFiles) {
+            // 添加图片文件到请求体
+            RequestBody imageBody = RequestBody.create(imageFile, MediaType.parse("image/jpeg"));
+            requestBodyBuilder.addFormDataPart("file[]", imageFile.getName(), imageBody);
+        }
+
+        // 添加其他参数到请求体
+        for (HashMap.Entry<String, String> entry : param.entrySet()) {
+            requestBodyBuilder.addFormDataPart(entry.getKey(), entry.getValue());
+        }
+        Request.Builder requestBuilder = new Request.Builder()
+                .url(requestUrl)
+                .post(requestBodyBuilder.build());
+
+        if (jwt != null && !jwt.isEmpty()) {
+            requestBuilder.header("Authorization", jwt);
+        }
+
+        Request request = requestBuilder.build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
     public void post(String requestUrl, Callback callback){
         post(requestUrl, callback, "");
     }

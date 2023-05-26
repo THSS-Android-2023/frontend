@@ -1,10 +1,17 @@
 package com.example.internet.adapter.list;
 
 import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.internet.R;
+import com.example.internet.holder.NineGridImageViewHolder;
 import com.example.internet.model.TimelineModel;
+import com.jaeger.ninegridimageview.NineGridImageView;
 
 import java.util.List;
 
@@ -19,10 +26,18 @@ public class TimelineListAdapter extends BaseListAdapter<TimelineModel>{
                 .setText(R.id.username, item.username)
                 .setText(R.id.timestamp, item.timestamp)
                 .setText(R.id.title, item.title)
-                .setText(R.id.content, item.content)
-                .setImageResource(R.id.img1, item.img[0])
-                .setImageResource(R.id.img2, item.img[1])
-                .setImageResource(R.id.img3, item.img[2]);
+                .setText(R.id.content, item.content);
+//                .setImageResource(R.id.img1, item.img[0])
+//                .setImageResource(R.id.img2, item.img[1])
+//                .setImageResource(R.id.img3, item.img[2]);
+        ((NineGridImageViewHolder) holder).bindData(item.imgUris);
+    }
+
+    @Override
+    protected NineGridImageViewHolder onCreateDefViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.model_timeline, parent, false);
+        return new NineGridImageViewHolder(view);
     }
 
 }

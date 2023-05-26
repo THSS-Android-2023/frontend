@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     public void editMoment(View v){
 
         Intent intent = new Intent(this, EditMomentActivity.class);
+        intent.putExtra("jwt", jwt);
         startActivity(intent);
     }
 

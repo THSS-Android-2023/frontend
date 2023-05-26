@@ -48,4 +48,5 @@ dependencies {
     implementation 'io.noties.markwon:core:4.6.2'
     implementation 'io.noties.markwon:editor:4.6.2'
     implementation 'com.zhihu.android:matisse:0.5.3-beta3'
+    implementation 'com.jaeger.ninegridimageview:library:1.0.2'
 }
