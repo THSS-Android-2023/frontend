@@ -38,6 +38,29 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top|start"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_post_title"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:hint="请输入题目"
+            android:textStyle="bold" />
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/tag_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:ms_hint="添加标签"
+            />
+
+    </LinearLayout>
+
 
     <EditText
         android:id="@+id/et_post_text"

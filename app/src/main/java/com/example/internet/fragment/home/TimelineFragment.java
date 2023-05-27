@@ -68,10 +68,15 @@ public class TimelineFragment extends Fragment {
                     data.add(moment);
                     Log.d("moment len", data.size() + "");
                 }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             } catch(Exception e){
                 e.printStackTrace();
             }
-            hasGotMoment = true;
         }
     };
 
@@ -91,8 +96,6 @@ public class TimelineFragment extends Fragment {
         jwt = ((MainActivity) getActivity()).getJwt();
 
         new GetNewMomentRequest(getMomentCallback, jwt);
-
-        while (!hasGotMoment) {}
 
 //        data.add(new TimelineModel("pc20", R.drawable.avatar4,"11:05","【打卡美好生活】" , "校园春日即景，还看到了可爱的猫猫~", new int[]{R.drawable.pyq_41, R.drawable.pyq_42, R.drawable.pyq_43}));
 //        data.add(new TimelineModel("Pharos",R.drawable.avatar3, "11:19","【打卡美好生活】" , "和女朋友来吃火锅，看着真不错", new int[]{R.drawable.pyq_1, R.drawable.null_img, R.drawable.null_img}));
