@@ -1,7 +1,9 @@
 package com.example.internet.model;
 
 import android.os.Parcelable;
+import android.util.Log;
 
+import com.example.internet.R;
 import com.example.internet.util.Global;
 
 import org.json.JSONException;
@@ -23,7 +25,7 @@ public class TimelineModel {
     public int numStars = 0;
     public int numLikes = 0;
 
-    public int avatar = 0;
+    public int avatar = R.drawable.avatar1;
     public int img[] = {0,0,0};
 
     public List<String> imgUris = new ArrayList<>();
@@ -62,7 +64,9 @@ public class TimelineModel {
         }
 
         for (int i = 1; i <= numImages; i++) {
-            imgUrls.add(Global.API_URL + "/static/" + id + "_" + i + ".jpg");
+            String url = Global.API_URL + "/static/moment_imgs/" + id + "_" + i + ".jpg";
+            imgUrls.add(url);
+            Log.d("url", url);
         }
 
     }

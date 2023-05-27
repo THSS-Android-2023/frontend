@@ -10,8 +10,8 @@ public class GetNewMomentRequest extends BaseRequest{
 
     public GetNewMomentRequest(Callback saveCallback, String jwt){
         try{
-//            get(saveUrl, saveCallback, jwt);
-            post(saveUrl, saveCallback, jwt);
+            get(saveUrl, saveCallback, jwt);
+//            post(saveUrl, saveCallback, jwt);
         }
         catch (Exception e){
             e.printStackTrace();
