@@ -3,6 +3,7 @@ package com.example.internet.model;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.example.internet.R;
 import com.example.internet.util.Global;
 
 import org.json.JSONException;
@@ -63,7 +64,9 @@ public class TimelineModel {
         }
 
         for (int i = 1; i <= numImages; i++) {
-            imgUrls.add(Global.API_URL + "/static/" + id + "_" + i + ".jpg");
+            String url = Global.API_URL + "/static/moment_imgs/" + id + "_" + i + ".jpg";
+            imgUrls.add(url);
+            Log.d("url", url);
         }
 
     }

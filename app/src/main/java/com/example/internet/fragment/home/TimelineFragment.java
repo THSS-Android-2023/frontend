@@ -39,6 +39,8 @@ public class TimelineFragment extends Fragment {
     private TimelineListAdapter adapter;
     private String jwt;
 
+    private boolean hasGotMoment = false;
+
     Callback getMomentCallback = new Callback() {
         @Override
         public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -64,7 +66,14 @@ public class TimelineFragment extends Fragment {
 
                     TimelineModel moment = new TimelineModel(jsonObject);
                     data.add(moment);
+                    Log.d("moment len", data.size() + "");
                 }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             } catch(Exception e){
                 e.printStackTrace();
             }
@@ -92,6 +101,7 @@ public class TimelineFragment extends Fragment {
 //        data.add(new TimelineModel("Pharos",R.drawable.avatar3, "11:19","【打卡美好生活】" , "和女朋友来吃火锅，看着真不错", new int[]{R.drawable.pyq_1, R.drawable.null_img, R.drawable.null_img}));
 //        data.add(new TimelineModel("Felix",R.drawable.avatar2,"11:25","【打卡美好生活】" , "喝一杯美式，唤起美好一天~", new int[]{R.drawable.pyq_2, R.drawable.null_img, R.drawable.null_img}));
 //        data.add(new TimelineModel("Hsu1023", R.drawable.avatar1, "11:49","【打卡美好生活】" , "天津之旅，看到了天津之眼和漂亮的夜景！", new int[]{R.drawable.pyq_31,R.drawable.pyq_32,R.drawable.pyq_33}));
+        Log.d("len", data.size() + "");
         adapter = new TimelineListAdapter(data, getContext());
         adapter.setOnItemClickListener((adapter, view, position) -> {
             Log.d("123", "Clicked on " + position);

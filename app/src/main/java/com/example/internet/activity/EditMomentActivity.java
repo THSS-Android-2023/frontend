@@ -16,8 +16,11 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +31,10 @@ import com.example.internet.R;
 import com.example.internet.request.PublishMomentRequest;
 import com.example.internet.util.ErrorDialog;
 import com.example.internet.util.FileUtils;
+import com.google.android.material.snackbar.Snackbar;
 import com.jaeger.ninegridimageview.NineGridImageView;
 import com.jaeger.ninegridimageview.NineGridImageViewAdapter;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.squareup.picasso.Picasso;
 
 import org.commonmark.node.Node;
@@ -54,6 +59,7 @@ public class EditMomentActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 101;
 
     private EditText editText;
+    private EditText editTitle;
     private TextView textView;
 
     private String jwt;
@@ -62,10 +68,14 @@ public class EditMomentActivity extends AppCompatActivity {
     private String sharedPrefFile =
             "com.example.android.hellosharedprefs";
     private String mSharedText;
+    private String mSharedTitle;
     private String mSharedImg;
+    private String mSharedTag = "";
     // Shared preferences object
     private SharedPreferences mPreferences;
     private Uri imageUri = null;
+
+    private MaterialSpinner spinner;
 
     private List<String> uriList = new ArrayList<>();
     private NineGridImageView<String> nineGridImageView;
@@ -93,7 +103,7 @@ public class EditMomentActivity extends AppCompatActivity {
     };
 
 
-        @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_moment);
@@ -112,11 +122,16 @@ public class EditMomentActivity extends AppCompatActivity {
 
         mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
         mSharedText = mPreferences.getString("text", "");
-        mSharedImg = mPreferences.getString("img","");
+        mSharedTitle = mPreferences.getString("title", "");
+        mSharedImg = mPreferences.getString("img", "");
+        mSharedTag = mPreferences.getString("tag", "");
 
         editText = findViewById(R.id.et_post_text);
+        editTitle = findViewById(R.id.et_post_title);
         if (mSharedText != "")
             editText.setText(mSharedText);
+        if (mSharedText != "")
+            editTitle.setText(mSharedTitle);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -134,8 +149,38 @@ public class EditMomentActivity extends AppCompatActivity {
             }
         });
 
+        editTitle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mSharedTitle = s.toString();
+            }
+        });
+
+        spinner = (MaterialSpinner) findViewById(R.id.tag_spinner);
+        spinner.setItems("校园资讯", "二手交易", "学习科研", "吃喝玩乐");
+        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+
+            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+                mSharedTag = item;
+            }
+        });
+        if (mSharedTag != "") {
+            spinner.setItems(mSharedTag);
+        }
+
         ImageView img = findViewById(R.id.iv_post_image);
-        if (mSharedImg != ""){
+        if (mSharedImg != "") {
             try {
                 Uri uri = Uri.parse((String) mSharedImg);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
@@ -146,9 +191,9 @@ public class EditMomentActivity extends AppCompatActivity {
 
         }
 
-        img.setOnClickListener(new View.OnClickListener(){
+        img.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 photoPickerIntent.setType("image/*");
                 startActivityForResult(photoPickerIntent, SELECT_PHOTO);
@@ -187,6 +232,7 @@ public class EditMomentActivity extends AppCompatActivity {
                 // 其他权限的处理
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -218,7 +264,9 @@ public class EditMomentActivity extends AppCompatActivity {
         }
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
         preferencesEditor.putString("text", mSharedText);
+        preferencesEditor.putString("title", mSharedTitle);
         preferencesEditor.putString("img", mSharedImg);
+        preferencesEditor.putString("tag", mSharedTag);
         preferencesEditor.apply();
     }
 
@@ -229,7 +277,7 @@ public class EditMomentActivity extends AppCompatActivity {
 //        setResult(RESULT_OK, data);
         List<File> imageFiles = new ArrayList<>();
         Log.d("test", "111111");
-        Log.d("uri_0", uriList.get(0));
+//        Log.d("uri_0", uriList.get(0));
         for (String uri : uriList) {
             Uri imageUri = Uri.parse(uri);
             String path = FileUtils.getPath(this, imageUri);
@@ -238,7 +286,8 @@ public class EditMomentActivity extends AppCompatActivity {
         }
         File[] imageFileArray = imageFiles.toArray(new File[0]);
         Log.d("length", imageFileArray.length + "");
-        new PublishMomentRequest("title", mSharedText, "校园资讯", "China",
+
+        new PublishMomentRequest(mSharedTitle, mSharedText, mSharedTag, "China",
                 uriList.size(), imageFileArray, publishCallback, jwt);
 
 //        finish();
@@ -265,10 +314,10 @@ public class EditMomentActivity extends AppCompatActivity {
             Log.d("code", String.valueOf(code));
             if (code != 200 && code != 201)
                 new ErrorDialog(ctx, "发表失败：" + response.message());
-            try{
+            try {
                 AppCompatActivity appCtx = (AppCompatActivity) ctx;
                 appCtx.finish();
-            } catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
