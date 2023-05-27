@@ -1,6 +1,7 @@
 package com.example.internet.model;
 
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.example.internet.util.Global;
 
@@ -16,7 +17,7 @@ public class TimelineModel {
     public String username = "";
     public String timestamp = "";
     public String tag = "";
-    public String id = "";
+    public int id;
     public String location = "";
     public int numComments = 0;
     public int numImages = 0;
@@ -24,18 +25,17 @@ public class TimelineModel {
     public int numLikes = 0;
 
     public int avatar = 0;
-    public int img[] = {0,0,0};
 
     public List<String> imgUris = new ArrayList<>();
     public List<String> imgUrls = new ArrayList<>();
 
-    public TimelineModel(String username, int avatar, String timestamp, String title, String content, int[] img) {
+    public TimelineModel(String username, int avatar, String timestamp, String title, String content) {
+
         this.title = title;
         this.content = content;
         this.username = username;
         this.avatar = avatar;
         this.timestamp = timestamp;
-        this.img = img;
 
         int random_num = (int) (Math.random() * 9) + 1;
         for (int i = 0; i < random_num; i++) {
@@ -45,8 +45,9 @@ public class TimelineModel {
 
     public TimelineModel(JSONObject jsonObject) {
         try {
+//            Log.d("TimelineModel", jsonObject.toString());
             username = jsonObject.getString("username");
-            id = jsonObject.getString("id");
+            id = jsonObject.getInt("id");
             tag = jsonObject.getString("tag");
             title = jsonObject.getString("title");
             content = jsonObject.getString("content");

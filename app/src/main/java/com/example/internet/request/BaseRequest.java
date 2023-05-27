@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -39,18 +40,11 @@ public class BaseRequest {
     public void get(String requestUrl, Callback callback, String jwt){
 //        OkHttpClient client = new OkHttpClient();
         OkHttpClient client = new OkHttpClient.Builder()
+                .callTimeout(60, TimeUnit.SECONDS) // 设置调用超时时间
+                .readTimeout(60, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
 
-//        OkHttpClient client = new OkHttpClient.Builder()
-//                .addNetworkInterceptor(new Interceptor() {
-//                    @Override
-//                    public Response intercept(Chain chain) throws IOException {
-//                        Request request = chain.request().newBuilder().addHeader("Connection", "close").build();
-//                        return chain.proceed(request);
-//                    }
-//                })
-//                .build();
         HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(requestUrl)).newBuilder();
         for (HashMap.Entry < String, String > entry: param.entrySet()){
             urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
@@ -61,6 +55,7 @@ public class BaseRequest {
         if (jwt != null && !jwt.isEmpty()) {
             builder.header("Authorization", jwt);
         }
+        builder.header("Connection", "close");
 
         client.newCall(builder.build()).enqueue(callback);
     }

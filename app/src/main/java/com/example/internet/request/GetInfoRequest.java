@@ -11,6 +11,7 @@ public class GetInfoRequest extends BaseRequest{
 
 
     public GetInfoRequest(Callback saveCallback, String jwt){
+        super();
         try{
             BaseRequest saveRequest = new BaseRequest();
             saveRequest.get(saveUrl, saveCallback, jwt);
