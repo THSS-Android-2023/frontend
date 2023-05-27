@@ -1,11 +1,8 @@
 package com.example.internet.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,9 +23,8 @@ import com.example.internet.activity.FollowingActivity;
 import com.example.internet.activity.MainActivity;
 import com.example.internet.adapter.list.TimelineListAdapter;
 import com.example.internet.model.TimelineModel;
-import com.example.internet.request.getInfoRequest;
+import com.example.internet.request.GetInfoRequest;
 import com.example.internet.util.Global;
-import com.example.internet.request.BaseRequest;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -134,7 +130,7 @@ public class InfoFragment extends Fragment {
         username_textview.setText(username);
 
 
-        new getInfoRequest(updateInfoCallback, ctx.jwt);
+        new GetInfoRequest(updateInfoCallback, ctx.jwt);
 
         following_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,7 +180,7 @@ public class InfoFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == EDIT_ACTIVITY_REQUEST_CODE) {
-            new getInfoRequest(updateInfoCallback, ctx.jwt);
+            new GetInfoRequest(updateInfoCallback, ctx.jwt);
         }
     }
 }

@@ -4,16 +4,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 
 import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Callback;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class BaseRequest {
     private HashMap<String, String> param = new HashMap<>();
@@ -32,8 +35,22 @@ public class BaseRequest {
     public void get(String requestUrl, Callback callback){
         get(requestUrl, callback, "");
     }
+
     public void get(String requestUrl, Callback callback, String jwt){
-        OkHttpClient client = new OkHttpClient();
+//        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .retryOnConnectionFailure(true)
+                .build();
+
+//        OkHttpClient client = new OkHttpClient.Builder()
+//                .addNetworkInterceptor(new Interceptor() {
+//                    @Override
+//                    public Response intercept(Chain chain) throws IOException {
+//                        Request request = chain.request().newBuilder().addHeader("Connection", "close").build();
+//                        return chain.proceed(request);
+//                    }
+//                })
+//                .build();
         HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(requestUrl)).newBuilder();
         for (HashMap.Entry < String, String > entry: param.entrySet()){
             urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());

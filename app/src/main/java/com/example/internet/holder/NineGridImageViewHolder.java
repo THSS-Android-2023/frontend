@@ -26,11 +26,12 @@ public class NineGridImageViewHolder extends BaseViewHolder {
         @Override
         protected void onDisplayImage(Context context, ImageView imageView, String photo) {
             assert imageView != null;
-            Uri uri = Uri.parse(photo);
-
-            Picasso.get()
-                    .load(uri)
-                    .into(imageView);
+//            Uri uri = Uri.parse(photo);
+//
+//            Picasso.get()
+//                    .load(uri)
+//                    .into(imageView);
+            Picasso.get().load(photo).into(imageView);
         }
         @Override
         protected ImageView generateImageView(Context context) {

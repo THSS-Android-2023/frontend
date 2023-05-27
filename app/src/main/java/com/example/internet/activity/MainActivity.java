@@ -79,4 +79,8 @@ public class MainActivity extends AppCompatActivity {
         return username;
     }
 
+    public String getJwt() {
+        return jwt;
+    }
+
 }

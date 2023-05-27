@@ -30,7 +30,7 @@ public class TimelineListAdapter extends BaseListAdapter<TimelineModel>{
 //                .setImageResource(R.id.img1, item.img[0])
 //                .setImageResource(R.id.img2, item.img[1])
 //                .setImageResource(R.id.img3, item.img[2]);
-        ((NineGridImageViewHolder) holder).bindData(item.imgUris);
+        ((NineGridImageViewHolder) holder).bindData(item.imgUrls);
     }
 
     @Override
