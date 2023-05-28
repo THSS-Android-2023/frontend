@@ -299,7 +299,7 @@ public class EditMomentActivity extends AppCompatActivity {
         final Spanned markdown = markwon.render(node);
 
         markwon.setParsedMarkdown(textView, markdown);
-        Toast.makeText(this, markdown, Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, markdown, Toast.LENGTH_LONG).show();
     }
 
     Callback publishCallback = new Callback() {

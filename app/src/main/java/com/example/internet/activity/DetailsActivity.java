@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +33,7 @@ import com.jaeger.ninegridimageview.NineGridImageView;
 import com.jaeger.ninegridimageview.NineGridImageViewAdapter;
 import com.squareup.picasso.Picasso;
 
+import org.commonmark.node.Node;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -41,6 +43,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.noties.markwon.Markwon;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -300,7 +303,15 @@ public class DetailsActivity extends AppCompatActivity {
 
         titleView.setText(timelineModel.title);
         contentView.setText(timelineModel.content);
-//
+
+
+        final Markwon markwon = Markwon.create(this);
+        final Node node = markwon.parse(timelineModel.content);
+        final Spanned markdown = markwon.render(node);
+        markwon.setParsedMarkdown(contentView, markdown);
+
+
+
         nine_grid.setAdapter(new NineGridImageViewAdapter<String>() {
             @Override
             protected void onDisplayImage(Context context, ImageView imageView, String url) {

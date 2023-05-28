@@ -1,12 +1,11 @@
 package com.example.internet.holder;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.util.Log;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -16,11 +15,16 @@ import com.jaeger.ninegridimageview.NineGridImageView;
 import com.jaeger.ninegridimageview.NineGridImageViewAdapter;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
+import org.commonmark.node.Node;
+
 import java.util.List;
 
-public class NineGridImageViewHolder extends BaseViewHolder {
+import io.noties.markwon.Markwon;
+
+public class MomentDataHolder extends BaseViewHolder {
     private NineGridImageView<String> nineGridImageView;
+    private TextView textView;
+    private Context ctx;
 
     private NineGridImageViewAdapter<String> mAdapter = new NineGridImageViewAdapter<String>() {
         @Override
@@ -43,13 +47,23 @@ public class NineGridImageViewHolder extends BaseViewHolder {
         }
     };
 
-    public NineGridImageViewHolder(@NonNull View itemView) {
+    public MomentDataHolder(@NonNull View itemView) {
         super(itemView);
         nineGridImageView = itemView.findViewById(R.id.iv_nine_grid);
         nineGridImageView.setAdapter(mAdapter);
+
+        textView = itemView.findViewById(R.id.content);
+        ctx = itemView.getContext();
     }
 
-    public void bindData(List<String> data) {
-        nineGridImageView.setImagesData(data);
+    public void bindData(List<String> imageList, String content) {
+        nineGridImageView.setImagesData(imageList);
+
+        final Markwon markwon = Markwon.create(ctx);
+        final Node node = markwon.parse(content);
+        final Spanned markdown = markwon.render(node);
+
+        markwon.setParsedMarkdown(textView, markdown);
+//        Toast.makeText(ctx, markdown, Toast.LENGTH_LONG).show();
     }
 }

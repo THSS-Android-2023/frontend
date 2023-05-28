@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.internet.R;
-import com.example.internet.holder.NineGridImageViewHolder;
+import com.example.internet.holder.MomentDataHolder;
 import com.example.internet.model.TimelineModel;
 import com.jaeger.ninegridimageview.NineGridImageView;
 import com.squareup.picasso.Picasso;
@@ -46,17 +46,19 @@ public class TimelineListAdapter extends BaseListAdapter<TimelineModel>{
 
         ImageView avatarIv = holder.getView(R.id.avatar);
         Picasso.get().load(item.avatar).into(avatarIv);
-        ((NineGridImageViewHolder) holder).bindData(item.imgUrls);
+//        ((NineGridImageViewHolder) holder).bindData(item.imgUrls);
 
+
+        ((MomentDataHolder) holder).bindData(item.imgUrls, item.content);
 
 
     }
 
     @Override
-    protected NineGridImageViewHolder onCreateDefViewHolder(@NonNull ViewGroup parent, int viewType) {
+    protected MomentDataHolder onCreateDefViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.model_timeline, parent, false);
-        return new NineGridImageViewHolder(view);
+        return new MomentDataHolder(view);
     }
 
 }
