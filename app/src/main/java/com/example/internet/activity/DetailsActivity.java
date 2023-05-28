@@ -1,5 +1,6 @@
 package com.example.internet.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,8 +21,11 @@ import com.example.internet.adapter.list.CommentListAdapter;
 import com.example.internet.model.CommentModel;
 import com.example.internet.model.TimelineModel;
 import com.example.internet.request.GetCommentRequest;
-import com.example.internet.request.GetSearchResultRequest;
+import com.example.internet.request.LikeMomentRequest;
 import com.example.internet.request.PostCommentRequest;
+import com.example.internet.request.StarMomentRequest;
+import com.example.internet.request.UnlikeMomentRequest;
+import com.example.internet.request.UnstarMomentRequest;
 import com.example.internet.util.ErrorDialog;
 import com.google.gson.Gson;
 import com.jaeger.ninegridimageview.NineGridImageView;
@@ -69,6 +74,18 @@ public class DetailsActivity extends AppCompatActivity {
     @BindView(R.id.like_view) ImageView likeView;
 
     @BindView(R.id.star_view) ImageView starView;
+
+    @BindView(R.id.comment_layout)
+    LinearLayout commentLayout;
+
+    @BindView(R.id.like_layout)
+    LinearLayout likeLayout;
+
+    @BindView(R.id.star_layout)
+    LinearLayout starLayout;
+
+    @BindView(R.id.share_layout)
+    LinearLayout shareList;
 
     @BindView(R.id.comment_edit)
     EditText commentEdit;
@@ -147,6 +164,112 @@ public class DetailsActivity extends AppCompatActivity {
         }
     };
 
+    Callback likeMomentCallback = new Callback() {
+        @Override
+        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            new ErrorDialog(DetailsActivity.this, "点赞失败：" + e.getMessage());
+        }
+
+        @Override
+        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            int code = response.code();
+            Log.d("code", String.valueOf(code));
+            if (code != 200 && code != 201)
+                new ErrorDialog(DetailsActivity.this, "点赞失败：" + response.message());
+            else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        timelineModel.isLike = true;
+                        timelineModel.numLikes++;
+                        likeNum.setText("" + timelineModel.numLikes);
+                        likeView.setImageResource(R.drawable.like_red);
+                    }
+                });
+            }
+
+        }
+    };
+
+    Callback unlikeMomentCallback = new Callback() {
+        @Override
+        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            new ErrorDialog(DetailsActivity.this, "取消点赞失败：" + e.getMessage());
+        }
+
+        @Override
+        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            int code = response.code();
+            Log.d("code", String.valueOf(code));
+            if (code != 200 && code != 201)
+                new ErrorDialog(DetailsActivity.this, "取消点赞失败：" + response.message());
+            else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        timelineModel.isLike = false;
+                        timelineModel.numLikes--;
+                        likeNum.setText("" + timelineModel.numLikes);
+                        likeView.setImageResource(R.drawable.like_grey);
+                    }
+                });
+            }
+
+        }
+    };
+
+    Callback starMomentCallback = new Callback() {
+        @Override
+        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            new ErrorDialog(DetailsActivity.this, "收藏失败：" + e.getMessage());
+        }
+
+        @Override
+        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            int code = response.code();
+            Log.d("code", String.valueOf(code));
+            if (code != 200 && code != 201)
+                new ErrorDialog(DetailsActivity.this, "收藏失败：" + response.message());
+            else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        timelineModel.isStar = true;
+                        timelineModel.numStars++;
+                        starNum.setText("" + timelineModel.numStars);
+                        starView.setImageResource(R.drawable.star_blue);
+                    }
+                });
+            }
+        }
+    };
+
+    Callback unstarMomentCallback = new Callback() {
+        @Override
+        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            new ErrorDialog(DetailsActivity.this, "取消收藏失败：" + e.getMessage());
+        }
+
+        @Override
+        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            int code = response.code();
+            Log.d("code", String.valueOf(code));
+            if (code != 200 && code != 201)
+                new ErrorDialog(DetailsActivity.this, "取消收藏失败：" + response.message());
+            else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        timelineModel.isStar = false;
+                        timelineModel.numStars--;
+                        starNum.setText("" + timelineModel.numStars);
+                        starView.setImageResource(R.drawable.star_grey);
+                    }
+                });
+            }
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,14 +286,20 @@ public class DetailsActivity extends AppCompatActivity {
         timelineModel = gson.fromJson(jsonString, TimelineModel.class);
 
         usernameView.setText(timelineModel.username);
-        avatarView.setImageResource(timelineModel.avatar);
+//        avatarView.setImageResource(timelineModel.avatar);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Picasso.get()
+                        .load(timelineModel.avatar)
+                        .into(avatarView);
+            }
+        });
         timestampView.setText(timelineModel.timestamp);
+
 
         titleView.setText(timelineModel.title);
         contentView.setText(timelineModel.content);
-//        for (int i = 0; i < timelineModel.img.length; i++) {
-//            img[i].setImageResource(timelineModel.img[i]);
-//        }
 //
         nine_grid.setAdapter(new NineGridImageViewAdapter<String>() {
             @Override
@@ -201,13 +330,6 @@ public class DetailsActivity extends AppCompatActivity {
 
         commentData = new ArrayList<>();
 
-//        commentData.add(new CommentModel("pc20", "支持！！", "14:31", R.drawable.avatar4));
-//        commentData.add(new CommentModel("cjz20", "支持！！", "14:29", R.drawable.avatar2));
-//        commentData.add(new CommentModel("xuhb20", "哪天一起出去玩", "14:03", R.drawable.avatar1));
-//        commentData.add(new CommentModel("xuhb20", "彭老师也带带我", "13:51", R.drawable.avatar1));
-//        commentData.add(new CommentModel("cjz20", "彭老师带带我", "13:49", R.drawable.avatar2));
-//        commentData.add(new CommentModel("cjz20", "666", "13:31", R.drawable.avatar2));
-//        commentData.add(new CommentModel("xuhb20", "确实强", "13:29", R.drawable.avatar1));
         adapter = new CommentListAdapter(commentData, this);
         adapter.setOnItemClickListener((adapter, view, position) -> {
             Log.d("123", "Clicked on " + position);
@@ -228,13 +350,54 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
+        if (timelineModel.isLike)
+            likeView.setImageResource(R.drawable.like_red);
+        else
+            likeView.setImageResource(R.drawable.like_grey);
+        likeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (timelineModel.isLike) {
+                    new UnlikeMomentRequest(unlikeMomentCallback, timelineModel.id, jwt);
+                } else {
+                    new LikeMomentRequest(likeMomentCallback, timelineModel.id, jwt);
+                }
+            }
+        });
+
+        if (timelineModel.isStar)
+            starView.setImageResource(R.drawable.star_blue);
+        else
+            starView.setImageResource(R.drawable.star_grey);
+
+        starLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (timelineModel.isStar) {
+                    new UnstarMomentRequest(unstarMomentCallback, timelineModel.id, jwt);
+                } else {
+                    new StarMomentRequest(starMomentCallback, timelineModel.id, jwt);
+                }
+            }
+        });
+
         new GetCommentRequest(getCommentCallback, timelineModel.id, jwt);
-
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d("DetailsActivity", "onDestroy: ");
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        Log.d("DetailsActivity", "onBackPressed: ");
+        Intent intent = new Intent();
+        String json = new Gson().toJson(timelineModel);
+        intent.putExtra("timelineModelJson", json);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 }

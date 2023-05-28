@@ -1,5 +1,8 @@
 package com.example.internet.fragment.home;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +36,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class TimelineFragment extends Fragment {
+
+    private int JMP_TO_DETAILS = 101;
     final Context ctx = getContext();
     private RecyclerView recyclerView;
     private List<TimelineModel> data = new ArrayList<>();
@@ -110,7 +115,7 @@ public class TimelineFragment extends Fragment {
             Intent intent = new Intent(getActivity(), DetailsActivity.class);
             intent.putExtra("timelineModelJson", jsonString);
             intent.putExtra("jwt", jwt);
-            startActivity(intent);
+            startActivityForResult(intent, JMP_TO_DETAILS);
         });
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);
@@ -118,6 +123,32 @@ public class TimelineFragment extends Fragment {
 
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//        Log.d("123", "onActivityResult"+resultCode);
+
+        if (requestCode == JMP_TO_DETAILS && resultCode == Activity.RESULT_OK) {
+                String jsonString = data.getStringExtra("timelineModelJson");
+                Gson gson = new Gson();
+                TimelineModel timelineModel = gson.fromJson(jsonString, TimelineModel.class);
+//                int position = data.getIntExtra("position", 0);
+                int id = timelineModel.id;
+                int index = -1;
+                for (int i = 0; i < this.data.size(); i++) {
+                    if (this.data.get(i).id == id) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index == -1) return;
+                this.data.set(index, timelineModel);
+
+                adapter.notifyDataSetChanged();
+
+        }
     }
 
 

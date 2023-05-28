@@ -5,7 +5,7 @@
         android:icon="@drawable/baseline_home_24"/>
     <item android:id="@+id/bottom_topic"
         android:title="收藏"
-        android:icon="@drawable/baseline_star_24"/>
+        android:icon="@drawable/star_grey"/>
     <item android:id="@+id/bottom_guide"
         android:title="私信"
         android:icon="@drawable/baseline_message_24"/>
