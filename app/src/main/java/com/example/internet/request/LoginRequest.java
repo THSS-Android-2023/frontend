@@ -30,6 +30,7 @@ public class LoginRequest extends BaseRequest{
 
 
     public LoginRequest(String usr, String pwd, Callback callback){
+        super();
         this.ctx = (AppCompatActivity) ctx;
         this.usr = usr;
         this.pwd = pwd;

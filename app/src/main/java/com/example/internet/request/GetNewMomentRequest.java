@@ -9,6 +9,7 @@ public class GetNewMomentRequest extends BaseRequest{
     String saveUrl = Global.API_URL + "/moment/get_new_moment/0/";
 
     public GetNewMomentRequest(Callback saveCallback, String jwt){
+        super();
         try{
             get(saveUrl, saveCallback, jwt);
 //            post(saveUrl, saveCallback, jwt);

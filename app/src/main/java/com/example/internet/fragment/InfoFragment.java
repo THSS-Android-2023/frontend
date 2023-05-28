@@ -157,10 +157,10 @@ public class InfoFragment extends Fragment {
 
         data = new ArrayList<>();
 
-        data.add(new TimelineModel("xuhb20", R.drawable.avatar1,"11:05","【打卡美好生活】" , "校园春日即景，还看到了可爱的猫猫~", new int[]{R.drawable.pyq_41, R.drawable.pyq_42, R.drawable.pyq_43}));
-        data.add(new TimelineModel("xuhb20",R.drawable.avatar1, "11:19","【打卡美好生活】" , "和女朋友来吃火锅，看着真不错", new int[]{R.drawable.pyq_1, R.drawable.null_img, R.drawable.null_img}));
-        data.add(new TimelineModel("xuhb20",R.drawable.avatar1,"11:25","【打卡美好生活】" , "喝一杯美式，唤起美好一天~", new int[]{R.drawable.pyq_2, R.drawable.null_img, R.drawable.null_img}));
-        data.add(new TimelineModel("xuhb20", R.drawable.avatar1, "11:49","【打卡美好生活】" , "天津之旅，看到了天津之眼和漂亮的夜景！", new int[]{R.drawable.pyq_31,R.drawable.pyq_32,R.drawable.pyq_33}));
+//        data.add(new TimelineModel("xuhb20", R.drawable.avatar1,"11:05","【打卡美好生活】" , "校园春日即景，还看到了可爱的猫猫~",));
+//        data.add(new TimelineModel("xuhb20",R.drawable.avatar1, "11:19","【打卡美好生活】" , "和女朋友来吃火锅，看着真不错"));
+//        data.add(new TimelineModel("xuhb20",R.drawable.avatar1,"11:25","【打卡美好生活】" , "喝一杯美式，唤起美好一天~"));
+//        data.add(new TimelineModel("xuhb20", R.drawable.avatar1, "11:49","【打卡美好生活】" , "天津之旅，看到了天津之眼和漂亮的夜景！"));
         adapter = new TimelineListAdapter(data, getContext());
         adapter.setOnItemClickListener((adapter, view, position) -> {
             Log.d("123", "Clicked on " + position);

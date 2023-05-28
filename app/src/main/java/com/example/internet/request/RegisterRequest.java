@@ -20,6 +20,7 @@ import okhttp3.Response;
 
 public class RegisterRequest extends BaseRequest{
     public RegisterRequest(String usr, String pwd, Callback callback){
+        super();
         String loginUrl = Global.API_URL + "/account/register/";
 
         addParam("username", usr);

@@ -107,6 +107,7 @@ public class TimelineFragment extends Fragment {
             String jsonString = gson.toJson(data.get(position));
             Intent intent = new Intent(getActivity(), DetailsActivity.class);
             intent.putExtra("timelineModelJson", jsonString);
+            intent.putExtra("jwt", jwt);
             startActivity(intent);
         });
         adapter.setManager(recyclerView);
