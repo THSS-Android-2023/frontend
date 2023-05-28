@@ -64,6 +64,6 @@ public class MomentDataHolder extends BaseViewHolder {
         final Spanned markdown = markwon.render(node);
 
         markwon.setParsedMarkdown(textView, markdown);
-        Toast.makeText(ctx, markdown, Toast.LENGTH_LONG).show();
+//        Toast.makeText(ctx, markdown, Toast.LENGTH_LONG).show();
     }
 }
