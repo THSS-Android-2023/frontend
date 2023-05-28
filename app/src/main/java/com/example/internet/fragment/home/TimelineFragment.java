@@ -39,8 +39,6 @@ public class TimelineFragment extends Fragment {
     private TimelineListAdapter adapter;
     private String jwt;
 
-    private boolean hasGotMoment = false;
-
     Callback getMomentCallback = new Callback() {
         @Override
         public void onFailure(@NonNull Call call, @NonNull IOException e) {
