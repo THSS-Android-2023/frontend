@@ -1,7 +1,5 @@
 package com.example.internet.fragment.home;
 
-import static android.app.Activity.RESULT_OK;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +18,7 @@ import com.example.internet.activity.DetailsActivity;
 import com.example.internet.activity.MainActivity;
 import com.example.internet.adapter.list.TimelineListAdapter;
 import com.example.internet.model.TimelineModel;
-import com.example.internet.request.GetNewMomentRequest;
+import com.example.internet.request.GetMomentRequest;
 import com.example.internet.util.ErrorDialog;
 import com.google.gson.Gson;
 
@@ -37,10 +35,29 @@ import okhttp3.Response;
 
 public class TimelineFragment extends Fragment {
 
-    private int JMP_TO_DETAILS = 101;
-    final Context ctx = getContext();
+    private final static int JMP_TO_DETAILS = 100;
+
+    public final static int NEWEST_PAGE = 100;
+    public final static int HOTTEST_PAGE = 101;
+    public final static int FOLLOWINGS_PAGE = 102;
+    public final static int PERSONAL_PAGE = 103;
+
+
+    int pageAttr = 0;
+
+    public static TimelineFragment newInstance(int param, Context ctx) {
+        TimelineFragment fragment = new TimelineFragment();
+        fragment.pageAttr = param;
+        fragment.ctx = ctx;
+        return fragment;
+    }
+
+
+
+
+    Context ctx = getContext();
     private RecyclerView recyclerView;
-    private List<TimelineModel> data = new ArrayList<>();
+    private List<TimelineModel> data;
     private TimelineListAdapter adapter;
     private String jwt;
 
@@ -98,13 +115,8 @@ public class TimelineFragment extends Fragment {
 
         jwt = ((MainActivity) getActivity()).getJwt();
 
-        new GetNewMomentRequest(getMomentCallback, jwt);
+        data = new ArrayList<>();
 
-//        data.add(new TimelineModel("pc20", R.drawable.avatar4,"11:05","【打卡美好生活】" , "校园春日即景，还看到了可爱的猫猫~", new int[]{R.drawable.pyq_41, R.drawable.pyq_42, R.drawable.pyq_43}));
-//        data.add(new TimelineModel("Pharos",R.drawable.avatar3, "11:19","【打卡美好生活】" , "和女朋友来吃火锅，看着真不错", new int[]{R.drawable.pyq_1, R.drawable.null_img, R.drawable.null_img}));
-//        data.add(new TimelineModel("Felix",R.drawable.avatar2,"11:25","【打卡美好生活】" , "喝一杯美式，唤起美好一天~", new int[]{R.drawable.pyq_2, R.drawable.null_img, R.drawable.null_img}));
-//        data.add(new TimelineModel("Hsu1023", R.drawable.avatar1, "11:49","【打卡美好生活】" , "天津之旅，看到了天津之眼和漂亮的夜景！", new int[]{R.drawable.pyq_31,R.drawable.pyq_32,R.drawable.pyq_33}));
-        Log.d("len", data.size() + "");
         adapter = new TimelineListAdapter(data, getContext());
         adapter.setOnItemClickListener((adapter, view, position) -> {
             Log.d("123", "Clicked on " + position);
@@ -118,21 +130,17 @@ public class TimelineFragment extends Fragment {
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);
 
-
-
+        new GetMomentRequest(getMomentCallback, pageAttr, jwt);
         return rootView;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        Log.d("123", "onActivityResult"+resultCode);
-
         if (requestCode == JMP_TO_DETAILS && resultCode == Activity.RESULT_OK) {
                 String jsonString = data.getStringExtra("timelineModelJson");
                 Gson gson = new Gson();
                 TimelineModel timelineModel = gson.fromJson(jsonString, TimelineModel.class);
-//                int position = data.getIntExtra("position", 0);
                 int id = timelineModel.id;
                 int index = -1;
                 for (int i = 0; i < this.data.size(); i++) {

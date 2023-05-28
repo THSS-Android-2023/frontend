@@ -12,7 +12,6 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.internet.R;
 import com.example.internet.holder.MomentDataHolder;
 import com.example.internet.model.TimelineModel;
-import com.jaeger.ninegridimageview.NineGridImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
