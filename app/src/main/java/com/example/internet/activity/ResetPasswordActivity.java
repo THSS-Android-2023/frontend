@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.internet.R;
+import com.example.internet.request.ChangePasswordRequest;
 import com.example.internet.util.ErrorDialog;
 import com.example.internet.request.BaseRequest;
 
@@ -49,10 +50,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
         String pwd1 = new_password.getText().toString();
         String pwd2 = repeat_password.getText().toString();
         if (!pwd1.equals(pwd2)){
-            ErrorDialog error = new ErrorDialog(this, "两次密码不一致");
+            new ErrorDialog(this, "两次密码不一致");
             return;
         }
         if(usr.isEmpty()||pwd.isEmpty()||pwd1.isEmpty()||pwd2.isEmpty()){
+            new ErrorDialog(this, "输入为空");
             return;
         }
         try{
@@ -77,11 +79,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     finish();
                 }
             };
-            BaseRequest loginRequest = new BaseRequest();
-            loginRequest.addParam("username", username);
-            loginRequest.addParam("old_password", pwd);
-            loginRequest.addParam("new_password", pwd1);
-            loginRequest.post(resetPasswordUrl, resetPasswordCallback);
+            new ChangePasswordRequest(resetPasswordCallback, usr, pwd, pwd1);
 
         }
         catch (Exception e){

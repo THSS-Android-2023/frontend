@@ -1,4 +1,4 @@
-package com.example.internet.fragment.home;
+package com.example.internet.fragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.internet.R;
@@ -42,6 +43,8 @@ public class TimelineFragment extends Fragment {
     public final static int FOLLOWINGS_PAGE = 102;
     public final static int PERSONAL_PAGE = 103;
 
+    public final static int STARRED_PAGE = 104;
+
 
     int pageAttr = 0;
 
@@ -52,16 +55,15 @@ public class TimelineFragment extends Fragment {
         return fragment;
     }
 
-
-
-
     Context ctx = getContext();
     private RecyclerView recyclerView;
     private List<TimelineModel> data;
     private TimelineListAdapter adapter;
     private String jwt;
 
-    Callback getMomentCallback = new Callback() {
+    private String username;
+
+    Callback refreshMomentCallback = new Callback() {
         @Override
         public void onFailure(@NonNull Call call, @NonNull IOException e) {
         }
@@ -79,6 +81,8 @@ public class TimelineFragment extends Fragment {
                 Log.d("responseBody", responseBody);
 
                 JSONArray jsonArray = new JSONArray(responseBody);
+
+                data.clear();
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -114,6 +118,7 @@ public class TimelineFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recyclerview);
 
         jwt = ((MainActivity) getActivity()).getJwt();
+        username = ((MainActivity) getActivity()).getUsername();
 
         data = new ArrayList<>();
 
@@ -125,12 +130,35 @@ public class TimelineFragment extends Fragment {
             Intent intent = new Intent(getActivity(), DetailsActivity.class);
             intent.putExtra("timelineModelJson", jsonString);
             intent.putExtra("jwt", jwt);
+            intent.putExtra("username", username);
             startActivityForResult(intent, JMP_TO_DETAILS);
         });
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);
 
-        new GetMomentRequest(getMomentCallback, pageAttr, jwt);
+        new GetMomentRequest(refreshMomentCallback, pageAttr, jwt);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+                int totalItemCount = layoutManager.getItemCount();
+
+                if (firstVisibleItemPosition == 0) {
+                    Log.d("123", "refresh");
+                    new GetMomentRequest(refreshMomentCallback, pageAttr, jwt);
+
+                }
+
+                if (lastVisibleItemPosition == totalItemCount - 1) {
+                    Log.d("123", "load more");
+                }
+            }
+        });
         return rootView;
     }
 

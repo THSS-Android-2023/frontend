@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.internet.fragment.home.TimelineFragment;
+import com.example.internet.fragment.TimelineFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to

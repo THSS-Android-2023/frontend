@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -12,6 +13,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.internet.R;
 import com.example.internet.holder.MomentDataHolder;
 import com.example.internet.model.TimelineModel;
+import com.example.internet.util.Global;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -45,12 +47,10 @@ public class TimelineListAdapter extends BaseListAdapter<TimelineModel>{
 
         ImageView avatarIv = holder.getView(R.id.avatar);
         Picasso.get().load(item.avatar).into(avatarIv);
-//        ((NineGridImageViewHolder) holder).bindData(item.imgUrls);
-
 
         ((MomentDataHolder) holder).bindData(item.imgUrls, item.content);
 
-
+        ((TextView)holder.getView(R.id.tag)).setText(Global.TAG_MAP.get(item.tag));
     }
 
     @Override

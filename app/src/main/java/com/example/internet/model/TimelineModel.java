@@ -29,21 +29,9 @@ public class TimelineModel {
 
     public Boolean isStar = false;
     public Boolean isLike = false;
-    public List<String> imgUrls = new ArrayList<>();
 
-//    public TimelineModel(String username, int avatar, String timestamp, String title, String content) {
-//
-//        this.title = title;
-//        this.content = content;
-//        this.username = username;
-//        this.avatar = avatar;
-//        this.timestamp = timestamp;
-//
-//        int random_num = (int) (Math.random() * 9) + 1;
-//        for (int i = 0; i < random_num; i++) {
-//            imgUris.add("content://com.android.providers.media.documents/document/image%3A31");
-//        }
-//    }
+    public Boolean isFollow = false;
+    public List<String> imgUrls = new ArrayList<>();
 
     public TimelineModel(JSONObject jsonObject) {
         try {
@@ -64,6 +52,7 @@ public class TimelineModel {
 
             isStar = jsonObject.getBoolean("is_current_user_star");
             isLike = jsonObject.getBoolean("is_current_user_like");
+            isFollow = jsonObject.getBoolean("is_current_user_following");
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -73,7 +62,5 @@ public class TimelineModel {
             imgUrls.add(url);
             Log.d("url", url);
         }
-
     }
 }
-

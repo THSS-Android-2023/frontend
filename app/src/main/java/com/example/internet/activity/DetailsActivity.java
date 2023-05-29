@@ -3,6 +3,7 @@ package com.example.internet.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.util.Log;
@@ -21,10 +22,13 @@ import com.example.internet.R;
 import com.example.internet.adapter.list.CommentListAdapter;
 import com.example.internet.model.CommentModel;
 import com.example.internet.model.TimelineModel;
+import com.example.internet.request.CheckFollowshipRequest;
+import com.example.internet.request.FollowUserRequest;
 import com.example.internet.request.GetCommentRequest;
 import com.example.internet.request.LikeMomentRequest;
 import com.example.internet.request.PostCommentRequest;
 import com.example.internet.request.StarMomentRequest;
+import com.example.internet.request.UnfollowUserRequest;
 import com.example.internet.request.UnlikeMomentRequest;
 import com.example.internet.request.UnstarMomentRequest;
 import com.example.internet.util.ErrorDialog;
@@ -96,12 +100,113 @@ public class DetailsActivity extends AppCompatActivity {
     @BindView(R.id.comment_submit)
     Button commentSubmit;
 
+    @BindView(R.id.following_btn)
+    Button follow_btn;
+
     private List<CommentModel> commentData;
     private CommentListAdapter adapter;
 
     private String jwt;
+    private String tmpUsername;
 
     TimelineModel timelineModel;
+
+    private Context ctx = this;
+
+    void changeBtnState(Boolean following){
+        if (!following){
+            timelineModel.isFollow = false;
+            String text = "+  关注";
+            String color = "#cccccc";
+            follow_btn.setText(text);
+            follow_btn.setBackgroundColor(Color.parseColor(color));
+        }
+        else {
+            timelineModel.isFollow = true;
+            String text = "√ 已关注";
+            String color = "#E4AAEA";
+            follow_btn.setText(text);
+            follow_btn.setBackgroundColor(Color.parseColor(color));
+        }
+    }
+
+    Callback checkFollowshipCallback = new Callback() {
+        @Override
+        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            new ErrorDialog((AppCompatActivity) ctx, "获取关注信息失败");
+        }
+
+        @Override
+        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            // check return code
+            if (response.code() != 200) {
+                new ErrorDialog((AppCompatActivity) ctx, "获取关注信息失败");
+                return;
+            }
+            String resStr = response.body().string();
+            try {
+                JSONArray jsonArray = new JSONArray(resStr);
+                Boolean following = jsonArray.getBoolean(0);
+                ((AppCompatActivity) ctx).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        changeBtnState(following);
+                    }
+
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    Callback followUserCallback = new Callback() {
+        @Override
+        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            new ErrorDialog((AppCompatActivity) ctx, "关注失败");
+        }
+
+        @Override
+        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            // check return code
+            if (response.code() != 200 && response.code() != 201) {
+                new ErrorDialog((AppCompatActivity) ctx, "关注失败");
+                return;
+            }
+            timelineModel.isFollow = true;
+            ((AppCompatActivity) ctx).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    changeBtnState(true);
+                }
+
+            });
+        }
+    };
+
+    Callback unfollowUserCallback = new Callback() {
+        @Override
+        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            new ErrorDialog((AppCompatActivity) ctx, "取消关注失败");
+        }
+
+        @Override
+        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            // check return code
+            if (response.code() != 200 && response.code() != 201) {
+                new ErrorDialog((AppCompatActivity) ctx, "取消关注失败");
+                return;
+            }
+            timelineModel.isFollow = false;
+            ((AppCompatActivity) ctx).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    changeBtnState(false);
+                }
+
+            });
+        }
+    };
 
     Callback getCommentCallback = new Callback() {
         @Override
@@ -217,7 +322,6 @@ public class DetailsActivity extends AppCompatActivity {
                     }
                 });
             }
-
         }
     };
 
@@ -284,6 +388,7 @@ public class DetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String jsonString = intent.getStringExtra("timelineModelJson");
         jwt = intent.getStringExtra("jwt");
+        tmpUsername = intent.getStringExtra("username");
 
         Gson gson = new Gson();
         timelineModel = gson.fromJson(jsonString, TimelineModel.class);
@@ -392,6 +497,24 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
+        changeBtnState(timelineModel.isFollow);
+
+        if (timelineModel.username.equals(tmpUsername)) {
+            follow_btn.setVisibility(View.GONE);
+        }
+        else {
+            follow_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (timelineModel.isFollow) {
+                        new UnfollowUserRequest(unfollowUserCallback, timelineModel.username, jwt);
+                    } else {
+                        new FollowUserRequest(followUserCallback, timelineModel.username, jwt);
+                    }
+                }
+            });
+            new CheckFollowshipRequest(checkFollowshipCallback, timelineModel.username, jwt);
+        }
         new GetCommentRequest(getCommentCallback, timelineModel.id, jwt);
     }
 
@@ -403,7 +526,6 @@ public class DetailsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
         Log.d("DetailsActivity", "onBackPressed: ");
         Intent intent = new Intent();
         String json = new Gson().toJson(timelineModel);

@@ -50,6 +50,8 @@ public class InfoFragment extends Fragment {
     String introduction;
     String avatar_url;
 
+    int followers_num, followings_num;
+
 
     private RecyclerView recyclerView;
     private List<TimelineModel> data;
@@ -61,6 +63,12 @@ public class InfoFragment extends Fragment {
 
     @BindView(R.id.following)
     LinearLayout following_button;
+
+    @BindView(R.id.followings_num)
+    TextView followings_num_text;
+
+    @BindView(R.id.followers_num)
+    TextView followers_num_text;
 
     @BindView(R.id.edit_button)
     Button edit_button;
@@ -93,7 +101,10 @@ public class InfoFragment extends Fragment {
                 introduction = jsonObject.getString("intro");
                 intro_textview.setText(introduction);
                 avatar_url = jsonObject.getString("avatar");
-                Log.d("infoFragmentAvatar", avatar_url);
+                followers_num = jsonObject.getInt("followers_num");
+                followings_num = jsonObject.getInt("followings_num");
+                Log.d("followings_num", ""+followings_num);
+//                Log.d("infoFragmentAvatar", avatar_url);
                 if (avatar_url.isEmpty())
                     avatar_url = Global.EMPTY_AVATAR_URL;
                 ctx.runOnUiThread(new Runnable() {
@@ -101,6 +112,8 @@ public class InfoFragment extends Fragment {
                     public void run() {
                         // 在此处执行需要在主线程中进行的 UI 操作
                         Picasso.get().load(avatar_url).into(img_avatar);
+                        followers_num_text.setText("" + followers_num);
+                        followings_num_text.setText("" + followings_num);
                     }
                 });
             }
@@ -157,10 +170,6 @@ public class InfoFragment extends Fragment {
 
         data = new ArrayList<>();
 
-//        data.add(new TimelineModel("xuhb20", R.drawable.avatar1,"11:05","【打卡美好生活】" , "校园春日即景，还看到了可爱的猫猫~",));
-//        data.add(new TimelineModel("xuhb20",R.drawable.avatar1, "11:19","【打卡美好生活】" , "和女朋友来吃火锅，看着真不错"));
-//        data.add(new TimelineModel("xuhb20",R.drawable.avatar1,"11:25","【打卡美好生活】" , "喝一杯美式，唤起美好一天~"));
-//        data.add(new TimelineModel("xuhb20", R.drawable.avatar1, "11:49","【打卡美好生活】" , "天津之旅，看到了天津之眼和漂亮的夜景！"));
         adapter = new TimelineListAdapter(data, getContext());
         adapter.setOnItemClickListener((adapter, view, position) -> {
             Log.d("123", "Clicked on " + position);
