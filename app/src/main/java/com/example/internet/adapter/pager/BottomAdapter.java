@@ -1,21 +1,25 @@
 package com.example.internet.adapter.pager;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.internet.activity.LoginActivity;
-import com.example.internet.activity.RegisterActivity;
 import com.example.internet.fragment.BlankFragment;
 import com.example.internet.fragment.ChatFragment;
 import com.example.internet.fragment.HomepageFragment;
 import com.example.internet.fragment.InfoFragment;
-import com.example.internet.fragment.home.TimelineFragment;
+import com.example.internet.fragment.TimelineFragment;
 
 public class BottomAdapter extends FragmentStateAdapter {
+
+    Context ctx;
     public BottomAdapter(@NonNull FragmentActivity fragmentActivity) {
+
         super(fragmentActivity);
+        ctx = fragmentActivity;
     }
 
     @Override
@@ -24,7 +28,7 @@ public class BottomAdapter extends FragmentStateAdapter {
             case 0:
                 return new HomepageFragment();
             case 1:
-                return new TimelineFragment();
+                return TimelineFragment.newInstance(TimelineFragment.STARRED_PAGE, ctx);
             case 2:
                 return new ChatFragment();
             case 3:

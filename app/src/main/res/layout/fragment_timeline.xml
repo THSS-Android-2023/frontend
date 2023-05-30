@@ -1,16 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#dddddd">
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    -->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:background="#dddddd">-->
 
-    <androidx.recyclerview.widget.RecyclerView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.nex3z.togglebuttongroup.SingleSelectToggleGroup
+                android:id="@+id/filter_group"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:tbgChildSpacing="auto"
+                app:tbgChildSpacingForLastRow="align"
+                app:tbgRowSpacing="8dp"
+                app:tbgCheckedButton="@+id/newest">
+
+                <com.nex3z.togglebuttongroup.button.LabelToggle
+                    android:id="@+id/newest"
+                    android:layout_width="80dp"
+                    android:layout_height="30dp"
+                    android:textSize="12dp"
+                    android:text="最新动态"/>
+
+                <com.nex3z.togglebuttongroup.button.LabelToggle
+                    android:id="@+id/like"
+                    android:layout_width="80dp"
+                    android:layout_height="30dp"
+                    android:textSize="12dp"
+                    android:text="最多点赞"/>
+
+                <com.nex3z.togglebuttongroup.button.LabelToggle
+                    android:id="@+id/comment"
+                    android:layout_width="80dp"
+                    android:layout_height="30dp"
+                    android:textSize="12dp"
+                    android:text="最多评论"/>
+
+            </com.nex3z.togglebuttongroup.SingleSelectToggleGroup>
+            <Spinner
+                android:id="@+id/tag_spinner"
+                android:layout_marginLeft="30dp"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="wrap_content" />
+    </LinearLayout>
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

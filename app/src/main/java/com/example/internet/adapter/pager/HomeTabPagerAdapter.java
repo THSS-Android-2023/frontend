@@ -1,13 +1,14 @@
 package com.example.internet.adapter.pager;
 
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.internet.fragment.BlankFragment;
-import com.example.internet.fragment.home.TimelineFragment;
+import com.example.internet.fragment.TimelineFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -15,20 +16,27 @@ import com.example.internet.fragment.home.TimelineFragment;
  */
 public class HomeTabPagerAdapter extends FragmentStateAdapter {
 
+    Context ctx;
+
 
     public HomeTabPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
-//        mContext = context;
         super(fragmentActivity);
+        ctx = fragmentActivity;
     }
 
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
-            default:
-                return new TimelineFragment();
-//            default:
-//                return new BlankFragment();
+            case 0:
+                return TimelineFragment.newInstance(TimelineFragment.NEWEST_PAGE, ctx);
+            case 1:
+                return TimelineFragment.newInstance(TimelineFragment.HOTTEST_PAGE, ctx);
+            case 2:
+                return TimelineFragment.newInstance(TimelineFragment.FOLLOWINGS_PAGE, ctx);
+            case 3:
+                return TimelineFragment.newInstance(TimelineFragment.TAGGED_PAGE, ctx);
         }
+        return null;
     }
 
     @Override
