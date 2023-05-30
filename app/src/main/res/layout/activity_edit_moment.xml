@@ -41,6 +41,38 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/tag_spinner"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:ms_hint="添加标签"
+            />
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/baseline_location_on_24"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="16dp"
+            />
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:textSize="16dp"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="top|start"
         android:orientation="horizontal">
 
@@ -51,13 +83,6 @@
             android:layout_margin="16dp"
             android:hint="请输入题目"
             android:textStyle="bold" />
-        <com.jaredrummler.materialspinner.MaterialSpinner
-            android:id="@+id/tag_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            app:ms_hint="添加标签"
-            />
 
     </LinearLayout>
 
