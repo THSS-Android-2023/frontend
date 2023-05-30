@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -18,10 +21,14 @@ import com.example.internet.R;
 import com.example.internet.activity.DetailsActivity;
 import com.example.internet.activity.MainActivity;
 import com.example.internet.adapter.list.TimelineListAdapter;
+import com.example.internet.adapter.style.SpinnerTextAdapter;
 import com.example.internet.model.TimelineModel;
 import com.example.internet.request.GetMomentRequest;
 import com.example.internet.util.ErrorDialog;
+import com.example.internet.util.Global;
 import com.google.gson.Gson;
+import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.nex3z.togglebuttongroup.SingleSelectToggleGroup;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,6 +37,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -42,11 +51,23 @@ public class TimelineFragment extends Fragment {
     public final static int HOTTEST_PAGE = 101;
     public final static int FOLLOWINGS_PAGE = 102;
     public final static int PERSONAL_PAGE = 103;
-
     public final static int STARRED_PAGE = 104;
+    public final static int TAGGED_PAGE = 105;
+
+    @BindView(R.id.recyclerview)
+    RecyclerView recyclerView;
+
+    @BindView(R.id.tag_spinner)
+    Spinner spinner;
+
+    @BindView(R.id.filter_group)
+    SingleSelectToggleGroup filterGroup;
 
 
     int pageAttr = 0;
+    String tagItem = "xyzx";
+
+    String filterItem = "time";
 
     public static TimelineFragment newInstance(int param, Context ctx) {
         TimelineFragment fragment = new TimelineFragment();
@@ -56,7 +77,6 @@ public class TimelineFragment extends Fragment {
     }
 
     Context ctx = getContext();
-    private RecyclerView recyclerView;
     private List<TimelineModel> data;
     private TimelineListAdapter adapter;
     private String jwt;
@@ -115,7 +135,8 @@ public class TimelineFragment extends Fragment {
             Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_timeline, container, false);
-        recyclerView = rootView.findViewById(R.id.recyclerview);
+        ButterKnife.bind(this, rootView);
+
 
         jwt = ((MainActivity) getActivity()).getJwt();
         username = ((MainActivity) getActivity()).getUsername();
@@ -135,8 +156,6 @@ public class TimelineFragment extends Fragment {
         });
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);
-
-        new GetMomentRequest(refreshMomentCallback, pageAttr, jwt);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -159,7 +178,66 @@ public class TimelineFragment extends Fragment {
                 }
             }
         });
+
+
+        // for tag spinner
+        if (pageAttr != TAGGED_PAGE){
+            spinner.setVisibility(View.GONE);
+        }
+        else {
+            ArrayAdapter<String> tagAdapter =
+                    new SpinnerTextAdapter(getActivity(), new ArrayList<>(Global.TAG_CODE2STR_MAP.values()), 14);
+            tagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(tagAdapter);
+            spinner.setSelection(3);
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    Log.d("123", spinner.getSelectedItem().toString());
+                    tagItem = Global.TAG_STR2CODE_MAP.get(spinner.getSelectedItem().toString());
+                    pullMoment();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+        }
+
+        // for filter group
+        if (pageAttr != FOLLOWINGS_PAGE && pageAttr != TAGGED_PAGE){
+            filterGroup.setVisibility(View.GONE);
+        }
+        else {
+            filterGroup.setOnCheckedChangeListener(new SingleSelectToggleGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(SingleSelectToggleGroup group, int checkedId) {
+                    if (checkedId == R.id.newest)
+                        filterItem = Global.FILTER_LIST.get(0);
+                    else if (checkedId == R.id.like)
+                        filterItem = Global.FILTER_LIST.get(1);
+                    else if (checkedId == R.id.comment)
+                        filterItem = Global.FILTER_LIST.get(2);
+                    Log.d("filterItem", filterItem);
+                    pullMoment();
+                }
+            });
+        };
+        pullMoment();
         return rootView;
+    }
+
+    private void pullMoment(){
+
+        if (pageAttr == FOLLOWINGS_PAGE) {
+            new GetMomentRequest(refreshMomentCallback, pageAttr, filterItem, jwt);
+            Log.d("HERE","HERE");
+        }
+        else if (pageAttr == TAGGED_PAGE)
+            new GetMomentRequest(refreshMomentCallback, pageAttr, tagItem, filterItem, jwt);
+        else
+            new GetMomentRequest(refreshMomentCallback, pageAttr, jwt);
     }
 
     @Override

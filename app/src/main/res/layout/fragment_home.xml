@@ -24,6 +24,10 @@
                 android:text="已关注"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+            <com.google.android.material.tabs.TabItem
+                android:text="分类看"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </com.google.android.material.tabs.TabLayout>
         <ImageView
             android:id="@+id/search_icon"

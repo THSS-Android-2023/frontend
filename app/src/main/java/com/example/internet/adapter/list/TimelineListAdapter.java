@@ -50,7 +50,7 @@ public class TimelineListAdapter extends BaseListAdapter<TimelineModel>{
 
         ((MomentDataHolder) holder).bindData(item.imgUrls, item.content);
 
-        ((TextView)holder.getView(R.id.tag)).setText(Global.TAG_MAP.get(item.tag));
+        ((TextView)holder.getView(R.id.tag)).setText(Global.TAG_CODE2STR_MAP.get(item.tag));
     }
 
     @Override

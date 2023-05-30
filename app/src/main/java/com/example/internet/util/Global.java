@@ -1,19 +1,42 @@
 package com.example.internet.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Global {
     public static final String API_URL = "http://10.0.2.2:5001";
     public static final String EMPTY_AVATAR_URL = API_URL + "/static/default.png";
 
-    public static final HashMap<String, String> TAG_MAP;
+    public static final HashMap<String, String> TAG_CODE2STR_MAP;
 
     static{
-        TAG_MAP = new HashMap<>();
-        TAG_MAP.put("esjy", "二手交易");
-        TAG_MAP.put("xyzx", "校园资讯");
-        TAG_MAP.put("xxky", "学习科研");
-        TAG_MAP.put("chwl", "吃喝玩乐");
-        TAG_MAP.put("", "default");
+        TAG_CODE2STR_MAP = new HashMap<>();
+        TAG_CODE2STR_MAP.put("xyzx", "校园资讯");
+        TAG_CODE2STR_MAP.put("xxky", "学习科研");
+        TAG_CODE2STR_MAP.put("esjy", "二手交易");
+        TAG_CODE2STR_MAP.put("chwl", "吃喝玩乐");
     }
+    public static final HashMap<String, String> TAG_STR2CODE_MAP;
+
+    static{
+        TAG_STR2CODE_MAP = new HashMap<>();
+        TAG_STR2CODE_MAP.put("校园资讯", "xyzx");
+        TAG_STR2CODE_MAP.put("学习科研", "xxky");
+        TAG_STR2CODE_MAP.put("二手交易", "esjy");
+        TAG_STR2CODE_MAP.put("吃喝玩乐", "chwl");
+    }
+
+    public static final List<String> FILTER_LIST;
+
+    static {
+        FILTER_LIST = new ArrayList<>();
+        FILTER_LIST.add("time");
+        FILTER_LIST.add("like");
+        FILTER_LIST.add("comment");
+    }
+
+
+
+
 }

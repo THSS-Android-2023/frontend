@@ -33,12 +33,14 @@ public class HomeTabPagerAdapter extends FragmentStateAdapter {
                 return TimelineFragment.newInstance(TimelineFragment.HOTTEST_PAGE, ctx);
             case 2:
                 return TimelineFragment.newInstance(TimelineFragment.FOLLOWINGS_PAGE, ctx);
+            case 3:
+                return TimelineFragment.newInstance(TimelineFragment.TAGGED_PAGE, ctx);
         }
         return null;
     }
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 4;
     }
 }
