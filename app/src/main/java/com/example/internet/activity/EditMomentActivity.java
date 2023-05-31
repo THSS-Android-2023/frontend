@@ -8,6 +8,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -41,8 +47,10 @@ import org.commonmark.node.Node;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.noties.markwon.Markwon;
 import io.noties.markwon.editor.MarkwonEditor;
@@ -51,7 +59,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class EditMomentActivity extends AppCompatActivity {
+public class EditMomentActivity extends AppCompatActivity implements LocationListener {
 
     final Context ctx = this;
     private Dialog mDialog;
@@ -61,6 +69,7 @@ public class EditMomentActivity extends AppCompatActivity {
     private EditText editText;
     private EditText editTitle;
     private TextView textView;
+    private TextView locationView;
 
     private String jwt;
 
@@ -71,6 +80,7 @@ public class EditMomentActivity extends AppCompatActivity {
     private String mSharedTitle;
     private String mSharedImg;
     private String mSharedTag = "";
+    private String mSharedLoc = "";
     // Shared preferences object
     private SharedPreferences mPreferences;
     private Uri imageUri = null;
@@ -117,21 +127,43 @@ public class EditMomentActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     102);
         }
+        if (checkSelfPermission(
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    103);
+        }
+        if (checkSelfPermission(
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    104);
+        }
 
         jwt = getIntent().getStringExtra("jwt");
+
+        String TAG = "loc";
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
         mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
         mSharedText = mPreferences.getString("text", "");
         mSharedTitle = mPreferences.getString("title", "");
         mSharedImg = mPreferences.getString("img", "");
         mSharedTag = mPreferences.getString("tag", "");
+        mSharedLoc = mPreferences.getString("loc", "");
 
         editText = findViewById(R.id.et_post_text);
         editTitle = findViewById(R.id.et_post_title);
+        locationView = findViewById(R.id.location);
         if (mSharedText != "")
             editText.setText(mSharedText);
         if (mSharedText != "")
             editTitle.setText(mSharedTitle);
+        if (mSharedLoc != "")
+            locationView.setText(mSharedLoc);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -267,6 +299,7 @@ public class EditMomentActivity extends AppCompatActivity {
         preferencesEditor.putString("title", mSharedTitle);
         preferencesEditor.putString("img", mSharedImg);
         preferencesEditor.putString("tag", mSharedTag);
+        preferencesEditor.putString("loc", mSharedLoc);
         preferencesEditor.apply();
     }
 
@@ -287,7 +320,7 @@ public class EditMomentActivity extends AppCompatActivity {
         File[] imageFileArray = imageFiles.toArray(new File[0]);
         Log.d("length", imageFileArray.length + "");
 
-        new PublishMomentRequest(mSharedTitle, mSharedText, mSharedTag, "China",
+        new PublishMomentRequest(mSharedTitle, mSharedText, mSharedTag, mSharedLoc,
                 uriList.size(), imageFileArray, publishCallback, jwt);
 
 //        finish();
@@ -322,4 +355,49 @@ public class EditMomentActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+//        double latitude = location.getLatitude();
+//        double longitude = location.getLongitude();
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(1);
+
+        double latitude = Double.parseDouble(df.format(location.getLatitude()));
+        double longitude = Double.parseDouble(df.format(location.getLongitude()));
+
+        mSharedLoc = "Lat: " + latitude + ", Lon: " + longitude;
+        Log.d("loc", mSharedLoc);
+        locationView.setText(mSharedLoc);
+
+//        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+//            String TAG = "location";
+//            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+//            if (addresses != null && !addresses.isEmpty()) {
+//                Address address = addresses.get(0);
+//                String countryName = address.getCountryName();
+//                String countryCode = address.getCountryCode();
+//                Log.d(TAG, "Country name: " + countryName);
+//                Log.d(TAG, "Country code: " + countryCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        LocationListener.super.onStatusChanged(provider, status, extras);
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+        LocationListener.super.onProviderEnabled(provider);
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+        LocationListener.super.onProviderDisabled(provider);
+    }
+
 }
