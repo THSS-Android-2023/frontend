@@ -27,6 +27,16 @@ public class Global {
         TAG_STR2CODE_MAP.put("吃喝玩乐", "chwl");
     }
 
+    public static final List<String> TAG_LIST;
+
+    static{
+        TAG_LIST = new ArrayList<>();
+        TAG_LIST.add("校园资讯");
+        TAG_LIST.add("学习科研");
+        TAG_LIST.add("二手交易");
+        TAG_LIST.add("吃喝玩乐");
+    }
+
     public static final List<String> FILTER_LIST;
 
     static {

@@ -14,8 +14,7 @@ public class GetSearchResultRequest extends BaseRequest{
         super();
         try{
             searchUrl += keyWords + "/0" + "/";
-            BaseRequest saveRequest = new BaseRequest();
-            saveRequest.get(searchUrl, saveCallback, jwt);
+            get(searchUrl, saveCallback, jwt);
         }
         catch (Exception e){
             e.printStackTrace();

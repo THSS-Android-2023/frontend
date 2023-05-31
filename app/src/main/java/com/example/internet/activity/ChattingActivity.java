@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.internet.R;
 import com.example.internet.chatkit.fixtures.MessagesFixtures;
 import com.example.internet.chatkit.model.Message;
+import com.example.internet.util.NotificationUtil;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
@@ -26,6 +27,8 @@ public class ChattingActivity extends AppCompatActivity implements MessagesListA
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        NotificationUtil.notify(this, this);
         setContentView(R.layout.activity_chatting);
 
         messagesList = findViewById(R.id.messagesList);

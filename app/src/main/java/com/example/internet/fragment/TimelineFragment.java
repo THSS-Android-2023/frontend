@@ -97,8 +97,10 @@ public class TimelineFragment extends Fragment {
 
             int code = response.code();
             Log.d("code", String.valueOf(code));
-            if (code != 200 && code != 201)
+            if (code != 200 && code != 201) {
                 new ErrorDialog(ctx, "获取动态失败：" + response.message());
+                return;
+            }
             try{
                 if (response.isSuccessful()) Log.d("response", "successful");
                 String responseBody = response.body().string();
@@ -202,7 +204,7 @@ public class TimelineFragment extends Fragment {
         }
         else {
             ArrayAdapter<String> tagAdapter =
-                    new SpinnerTextAdapter(getActivity(), new ArrayList<>(Global.TAG_CODE2STR_MAP.values()), 14);
+                    new SpinnerTextAdapter(getActivity(), Global.TAG_LIST, 14);
             tagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(tagAdapter);
             spinner.setSelection(3);

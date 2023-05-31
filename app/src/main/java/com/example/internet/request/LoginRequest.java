@@ -24,21 +24,18 @@ import okhttp3.Response;
 public class LoginRequest extends BaseRequest{
 
     String loginUrl = Global.API_URL + "/account/";
-    AppCompatActivity ctx;
     String usr, pwd, jwt;
 
 
 
     public LoginRequest(String usr, String pwd, Callback callback){
         super();
-        this.ctx = (AppCompatActivity) ctx;
         this.usr = usr;
         this.pwd = pwd;
         try{
-            BaseRequest loginRequest = new BaseRequest();
-            loginRequest.addParam("username", usr);
-            loginRequest.addParam("password", pwd);
-            loginRequest.post(loginUrl, callback);
+            addParam("username", usr);
+            addParam("password", pwd);
+            post(loginUrl, callback);
         }
         catch (Exception e){
             e.printStackTrace();

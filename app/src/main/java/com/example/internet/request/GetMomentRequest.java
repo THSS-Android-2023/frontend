@@ -18,6 +18,8 @@ public class GetMomentRequest extends BaseRequest{
 
     String getPersonUrl = Global.API_URL + "/moment/get_moment/";
 
+    String getMomentByIdUrl = Global.API_URL + "/moment/get_moment_by_id/";
+
 
     // NEWEST, HOTTEST, STARRED
     public GetMomentRequest(Callback saveCallback, int pageAttr, String jwt, int lastId){
@@ -26,18 +28,15 @@ public class GetMomentRequest extends BaseRequest{
             String attachStr = lastId != -1 ? String.valueOf(lastId) + "/": "";
             if (pageAttr == TimelineFragment.NEWEST_PAGE){
                 getNewestUrl += attachStr;
-                BaseRequest saveRequest = new BaseRequest();
-                saveRequest.get(getNewestUrl, saveCallback, jwt);
+                get(getNewestUrl, saveCallback, jwt);
             }
             else if (pageAttr == TimelineFragment.HOTTEST_PAGE){
                 getHottestUrl += attachStr;
-                BaseRequest saveRequest = new BaseRequest();
-                saveRequest.get(getHottestUrl, saveCallback, jwt);
+                get(getHottestUrl, saveCallback, jwt);
             }
             else if (pageAttr == TimelineFragment.STARRED_PAGE){
                 getStarUrl += attachStr;
-                BaseRequest saveRequest = new BaseRequest();
-                saveRequest.get(getStarUrl, saveCallback, jwt);
+                get(getStarUrl, saveCallback, jwt);
             }
         }
         catch (Exception e){
@@ -52,8 +51,7 @@ public class GetMomentRequest extends BaseRequest{
             String attachStr = lastId != -1 ? String.valueOf(lastId) + "/": "";
             if (pageAttr == TimelineFragment.FOLLOWINGS_PAGE){
                 getFollowingUrl += filter + "/" + attachStr;
-                BaseRequest saveRequest = new BaseRequest();
-                saveRequest.get(getFollowingUrl, saveCallback, jwt);
+                get(getFollowingUrl, saveCallback, jwt);
             }
         }
         catch (Exception e){
@@ -68,8 +66,7 @@ public class GetMomentRequest extends BaseRequest{
             String attachStr = lastId != -1 ? String.valueOf(lastId) + "/": "";
             if (pageAttr == TimelineFragment.TAGGED_PAGE){
                 getTagUrl += tag + "/" +  filter + "/" + attachStr;
-                BaseRequest saveRequest = new BaseRequest();
-                saveRequest.get(getTagUrl, saveCallback, jwt);
+                get(getTagUrl, saveCallback, jwt);
             }
         }
         catch (Exception e){
@@ -83,12 +80,22 @@ public class GetMomentRequest extends BaseRequest{
         try {
             String attachStr = lastId != -1 ? String.valueOf(lastId) + "/": "";
             getPersonUrl += username + "/" + attachStr;
-            BaseRequest saveRequest = new BaseRequest();
-            saveRequest.get(getPersonUrl, saveCallback, jwt);
+            get(getPersonUrl, saveCallback, jwt);
         }
         catch (Exception e){
             e.printStackTrace();
         }
     }
 
+    // get moment by id
+    public GetMomentRequest(Callback saveCallback, String jwt, int momentId){
+        super();
+        try {
+            getMomentByIdUrl += momentId + "/";
+            get(getMomentByIdUrl, saveCallback, jwt);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

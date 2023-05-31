@@ -88,8 +88,9 @@ public class HomepageFragment extends Fragment {
         notificationIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 创建一个 Intent 对象，指定要跳转的目标 Activity
                 Intent intent = new Intent(ctx, NotificationActivity.class);
+                intent.putExtra("jwt", jwt);
+                intent.putExtra("username", ((MainActivity) getActivity()).getUsername());
                 startActivity(intent);
             }
         });

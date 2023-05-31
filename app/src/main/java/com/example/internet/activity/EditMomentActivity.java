@@ -37,6 +37,7 @@ import com.example.internet.R;
 import com.example.internet.request.PublishMomentRequest;
 import com.example.internet.util.ErrorDialog;
 import com.example.internet.util.FileUtils;
+import com.example.internet.util.Global;
 import com.google.android.material.snackbar.Snackbar;
 import com.jaeger.ninegridimageview.NineGridImageView;
 import com.jaeger.ninegridimageview.NineGridImageViewAdapter;
@@ -149,20 +150,15 @@ public class EditMomentActivity extends AppCompatActivity implements LocationLis
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
         mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-        mSharedText = mPreferences.getString("text", "");
-        mSharedTitle = mPreferences.getString("title", "");
-        mSharedImg = mPreferences.getString("img", "");
-        mSharedTag = mPreferences.getString("tag", "");
-        mSharedLoc = mPreferences.getString("loc", "");
 
         editText = findViewById(R.id.et_post_text);
         editTitle = findViewById(R.id.et_post_title);
         locationView = findViewById(R.id.location);
-        if (mSharedText != "")
+        if (!mSharedText.isEmpty())
             editText.setText(mSharedText);
-        if (mSharedText != "")
+        if (!mSharedTitle.isEmpty())
             editTitle.setText(mSharedTitle);
-        if (mSharedLoc != "")
+        if (!mSharedLoc.isEmpty())
             locationView.setText(mSharedLoc);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -198,8 +194,8 @@ public class EditMomentActivity extends AppCompatActivity implements LocationLis
             }
         });
 
-        spinner = (MaterialSpinner) findViewById(R.id.tag_spinner);
-        spinner.setItems("校园资讯", "二手交易", "学习科研", "吃喝玩乐");
+        spinner = findViewById(R.id.tag_spinner);
+        spinner.setItems(Global.TAG_LIST);
         spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
@@ -207,12 +203,12 @@ public class EditMomentActivity extends AppCompatActivity implements LocationLis
                 mSharedTag = item;
             }
         });
-        if (mSharedTag != "") {
-            spinner.setItems(mSharedTag);
+        if (!mSharedTag.isEmpty()) {
+            spinner.setSelectedIndex(Global.TAG_LIST.indexOf(mSharedTag));
         }
 
         ImageView img = findViewById(R.id.iv_post_image);
-        if (mSharedImg != "") {
+        if (!mSharedImg.isEmpty()) {
             try {
                 Uri uri = Uri.parse((String) mSharedImg);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
@@ -294,6 +290,17 @@ public class EditMomentActivity extends AppCompatActivity implements LocationLis
             mDialog.dismiss();
             mDialog = null;
         }
+        putPreference();
+    }
+
+    void loadPreference(){
+        mSharedText = mPreferences.getString("text", "");
+        mSharedTitle = mPreferences.getString("title", "");
+        mSharedImg = mPreferences.getString("img", "");
+        mSharedTag = mPreferences.getString("tag", "");
+        mSharedLoc = mPreferences.getString("loc", "");
+    }
+    void putPreference(){
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
         preferencesEditor.putString("text", mSharedText);
         preferencesEditor.putString("title", mSharedTitle);
@@ -320,7 +327,7 @@ public class EditMomentActivity extends AppCompatActivity implements LocationLis
         File[] imageFileArray = imageFiles.toArray(new File[0]);
         Log.d("length", imageFileArray.length + "");
 
-        new PublishMomentRequest(mSharedTitle, mSharedText, mSharedTag, mSharedLoc,
+        new PublishMomentRequest(mSharedTitle, mSharedText, Global.TAG_STR2CODE_MAP.get(mSharedTag), mSharedLoc,
                 uriList.size(), imageFileArray, publishCallback, jwt);
 
 //        finish();
@@ -332,7 +339,6 @@ public class EditMomentActivity extends AppCompatActivity implements LocationLis
         final Spanned markdown = markwon.render(node);
 
         markwon.setParsedMarkdown(textView, markdown);
-//        Toast.makeText(this, markdown, Toast.LENGTH_LONG).show();
     }
 
     Callback publishCallback = new Callback() {
@@ -348,6 +354,10 @@ public class EditMomentActivity extends AppCompatActivity implements LocationLis
             if (code != 200 && code != 201)
                 new ErrorDialog(ctx, "发表失败：" + response.message());
             try {
+                mSharedText="";
+                mSharedImg="";
+                mSharedTitle="";
+                putPreference();
                 AppCompatActivity appCtx = (AppCompatActivity) ctx;
                 appCtx.finish();
             } catch (Exception e) {
