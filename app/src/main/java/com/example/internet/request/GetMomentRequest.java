@@ -16,7 +16,10 @@ public class GetMomentRequest extends BaseRequest{
 
     String getTagUrl = Global.API_URL + "/moment/get_tag_moment/";
 
+    String getPersonUrl = Global.API_URL + "/moment/get_moment/";
 
+
+    // NEWEST, HOTTEST, STARRED
     public GetMomentRequest(Callback saveCallback, int pageAttr, String jwt){
         super();
         try{
@@ -30,16 +33,18 @@ public class GetMomentRequest extends BaseRequest{
                 BaseRequest saveRequest = new BaseRequest();
                 saveRequest.get(getHottestUrl, saveCallback, jwt);
             }
-            else if (pageAttr == TimelineFragment.STARRED_PAGE){
-                getStarUrl += "0" + "/";
-                BaseRequest saveRequest = new BaseRequest();
-                saveRequest.get(getStarUrl, saveCallback, jwt);
-            }
+//            else if (pageAttr == TimelineFragment.STARRED_PAGE){
+//                getStarUrl += "";
+//                BaseRequest saveRequest = new BaseRequest();
+//                saveRequest.get(getStarUrl, saveCallback, jwt);
+//            }
         }
         catch (Exception e){
             e.printStackTrace();
         }
     }
+
+    // FOLLOWING
     public GetMomentRequest(Callback saveCallback, int pageAttr, String filter, String jwt){
         super();
         try {
@@ -54,6 +59,7 @@ public class GetMomentRequest extends BaseRequest{
         }
     }
 
+    // TAGGED
     public GetMomentRequest(Callback saveCallback, int pageAttr, String tag, String filter, String jwt){
         super();
         try {
@@ -62,6 +68,19 @@ public class GetMomentRequest extends BaseRequest{
                 BaseRequest saveRequest = new BaseRequest();
                 saveRequest.get(getTagUrl, saveCallback, jwt);
             }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    // PERSONAL
+    public GetMomentRequest(Callback saveCallback, String username, String jwt){
+        super();
+        try {
+            getPersonUrl += username + "/";
+            BaseRequest saveRequest = new BaseRequest();
+            saveRequest.get(getPersonUrl, saveCallback, jwt);
         }
         catch (Exception e){
             e.printStackTrace();

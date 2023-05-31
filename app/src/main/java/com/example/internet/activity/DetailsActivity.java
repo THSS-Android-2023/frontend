@@ -63,7 +63,6 @@ public class DetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.detail_content) TextView contentView;
 
-
     @BindView(R.id.recyclerview)
     RecyclerView recyclerView;
 
@@ -103,11 +102,15 @@ public class DetailsActivity extends AppCompatActivity {
     @BindView(R.id.following_btn)
     Button follow_btn;
 
+
+    @BindView(R.id.userinfo)
+    LinearLayout userinfoArea;
+
     private List<CommentModel> commentData;
     private CommentListAdapter adapter;
 
     private String jwt;
-    private String tmpUsername;
+    private String username;
 
     TimelineModel timelineModel;
 
@@ -388,7 +391,7 @@ public class DetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String jsonString = intent.getStringExtra("timelineModelJson");
         jwt = intent.getStringExtra("jwt");
-        tmpUsername = intent.getStringExtra("username");
+        username = intent.getStringExtra("username");
 
         Gson gson = new Gson();
         timelineModel = gson.fromJson(jsonString, TimelineModel.class);
@@ -497,9 +500,20 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
+        userinfoArea.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DetailsActivity.this, UserInfoActivity.class);
+                intent.putExtra("username", username);
+                intent.putExtra("curUsername", timelineModel.username);
+                intent.putExtra("jwt", jwt);
+                startActivity(intent);
+            }
+        });
+
         changeBtnState(timelineModel.isFollow);
 
-        if (timelineModel.username.equals(tmpUsername)) {
+        if (timelineModel.username.equals(username)) {
             follow_btn.setVisibility(View.GONE);
         }
         else {

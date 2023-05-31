@@ -24,11 +24,14 @@ import com.example.internet.activity.MainActivity;
 import com.example.internet.adapter.list.TimelineListAdapter;
 import com.example.internet.model.TimelineModel;
 import com.example.internet.request.GetInfoRequest;
+import com.example.internet.request.GetMomentRequest;
+import com.example.internet.util.ErrorDialog;
 import com.example.internet.util.Global;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,19 +47,18 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class InfoFragment extends Fragment {
-
-
     String username;
     String introduction;
     String avatar_url;
 
     int followers_num, followings_num;
 
-
-    private RecyclerView recyclerView;
+    @BindView(R.id.recyclerview)
+    RecyclerView recyclerView;
     private List<TimelineModel> data;
     private TimelineListAdapter adapter;
     MainActivity ctx;
+
 
     @BindView(R.id.follower)
     LinearLayout follower_button;
@@ -123,6 +125,45 @@ public class InfoFragment extends Fragment {
         }
     };
 
+    Callback getUserMomentCallback = new Callback() {
+        @Override
+        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            new ErrorDialog(ctx,  "Failed to get user's moment");
+        }
+
+        @Override
+        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            int code = response.code();
+            if (code != 200 && code != 201)
+                new ErrorDialog(ctx, "获取动态失败：" + response.message());
+            try{
+                if (response.isSuccessful()) Log.d("INFOFRAGMENT", "successful");
+                String responseBody = response.body().string();
+                Log.d("responseBody", responseBody);
+
+                JSONArray jsonArray = new JSONArray(responseBody);
+
+                data.clear();
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    Log.d("responseBody", jsonObject.toString());
+
+                    TimelineModel moment = new TimelineModel(jsonObject);
+                    data.add(moment);
+                    Log.d("moment len", data.size() + "");
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    };
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,7 +207,6 @@ public class InfoFragment extends Fragment {
         });
 
 
-        recyclerView = rootView.findViewById(R.id.recyclerview);
 
         data = new ArrayList<>();
 
@@ -176,11 +216,15 @@ public class InfoFragment extends Fragment {
             Gson gson = new Gson();
             String jsonString = gson.toJson(data.get(position));
             Intent intent = new Intent(getActivity(), DetailsActivity.class);
+            intent.putExtra("jwt", ctx.jwt);
+            intent.putExtra("username", username);
             intent.putExtra("timelineModelJson", jsonString);
             startActivity(intent);
         });
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);
+
+        new GetMomentRequest(getUserMomentCallback, username, ctx.jwt);
 
         return rootView;
     }

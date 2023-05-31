@@ -13,8 +13,18 @@ public class GetInfoRequest extends BaseRequest{
     public GetInfoRequest(Callback saveCallback, String jwt){
         super();
         try{
-            BaseRequest saveRequest = new BaseRequest();
-            saveRequest.get(saveUrl, saveCallback, jwt);
+            get(saveUrl, saveCallback, jwt);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public GetInfoRequest(Callback saveCallback, String username, String jwt){
+        super();
+        try{
+            saveUrl += username + "/";
+            get(saveUrl, saveCallback, jwt);
         }
         catch (Exception e){
             e.printStackTrace();
