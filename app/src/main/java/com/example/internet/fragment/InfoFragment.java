@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.internet.R;
 import com.example.internet.activity.DetailsActivity;
@@ -50,7 +51,6 @@ public class InfoFragment extends Fragment {
     String username;
     String introduction;
     String avatar_url;
-
     int followers_num, followings_num;
 
     @BindView(R.id.recyclerview)
@@ -84,6 +84,10 @@ public class InfoFragment extends Fragment {
 
     @BindView(R.id.username)
     TextView username_textview;
+
+
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     final int EDIT_ACTIVITY_REQUEST_CODE = 100;
 
@@ -143,24 +147,31 @@ public class InfoFragment extends Fragment {
 
                 JSONArray jsonArray = new JSONArray(responseBody);
 
-                data.clear();
+                List<TimelineModel> newData = new ArrayList<>();
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     Log.d("responseBody", jsonObject.toString());
-
                     TimelineModel moment = new TimelineModel(jsonObject);
-                    data.add(moment);
-                    Log.d("moment len", data.size() + "");
+                    newData.add(moment);
                 }
+                if (newData.size() == 0) return;
+                for (int i = 0; i < data.size(); i++){
+                    if (data.get(i).id == newData.get(0).id)
+                        return;
+                }
+                data.addAll(newData);
+
+            } catch(Exception e){
+                e.printStackTrace();
+            } finally {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
                         adapter.notifyDataSetChanged();
                     }
                 });
-            } catch(Exception e){
-                e.printStackTrace();
             }
         }
     };
@@ -184,7 +195,6 @@ public class InfoFragment extends Fragment {
         username_textview.setText(username);
 
 
-        new GetInfoRequest(updateInfoCallback, ctx.jwt);
 
         following_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,7 +234,19 @@ public class InfoFragment extends Fragment {
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);
 
-        new GetMomentRequest(getUserMomentCallback, username, ctx.jwt);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // 在这里触发对后端的请求
+                data.clear();
+                new GetInfoRequest(updateInfoCallback, username, ctx.jwt);
+                new GetMomentRequest(getUserMomentCallback, username, ctx.jwt, -1);
+            }
+        });
+
+
+        new GetInfoRequest(updateInfoCallback, ctx.jwt);
+        new GetMomentRequest(getUserMomentCallback, username, ctx.jwt, -1);
 
         return rootView;
     }

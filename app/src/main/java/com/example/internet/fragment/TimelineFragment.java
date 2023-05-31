@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.internet.R;
 import com.example.internet.activity.DetailsActivity;
@@ -63,6 +64,9 @@ public class TimelineFragment extends Fragment {
     @BindView(R.id.filter_group)
     SingleSelectToggleGroup filterGroup;
 
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
 
     int pageAttr = 0;
     String tagItem = "xyzx";
@@ -102,24 +106,31 @@ public class TimelineFragment extends Fragment {
 
                 JSONArray jsonArray = new JSONArray(responseBody);
 
-                data.clear();
+                List<TimelineModel> newData = new ArrayList<>();
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     Log.d("responseBody", jsonObject.toString());
-
                     TimelineModel moment = new TimelineModel(jsonObject);
-                    data.add(moment);
-                    Log.d("moment len", data.size() + "");
+                    newData.add(moment);
                 }
+                if (newData.size() == 0) return;
+                for (int i = 0; i < data.size(); i++){
+                    if (data.get(i).id == newData.get(0).id)
+                        return;
+                }
+                data.addAll(newData);
+
+            } catch(Exception e){
+                e.printStackTrace();
+            } finally {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
                         adapter.notifyDataSetChanged();
                     }
                 });
-            } catch(Exception e){
-                e.printStackTrace();
             }
         }
     };
@@ -159,6 +170,8 @@ public class TimelineFragment extends Fragment {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+
+        // load more
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -167,15 +180,18 @@ public class TimelineFragment extends Fragment {
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                 int totalItemCount = layoutManager.getItemCount();
 
-                if (firstVisibleItemPosition == 0) {
-                    Log.d("123", "refresh");
-                    new GetMomentRequest(refreshMomentCallback, pageAttr, jwt);
-
-                }
-
                 if (lastVisibleItemPosition == totalItemCount - 1) {
-                    Log.d("123", "load more");
+                  pullMoment();
                 }
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // 在这里触发对后端的请求
+                data.clear();
+                pullMoment();
             }
         });
 
@@ -195,6 +211,7 @@ public class TimelineFragment extends Fragment {
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     Log.d("123", spinner.getSelectedItem().toString());
                     tagItem = Global.TAG_STR2CODE_MAP.get(spinner.getSelectedItem().toString());
+                    data.clear();
                     pullMoment();
                 }
 
@@ -220,6 +237,7 @@ public class TimelineFragment extends Fragment {
                     else if (checkedId == R.id.comment)
                         filterItem = Global.FILTER_LIST.get(2);
                     Log.d("filterItem", filterItem);
+                    data.clear();
                     pullMoment();
                 }
             });
@@ -230,14 +248,23 @@ public class TimelineFragment extends Fragment {
 
     private void pullMoment(){
 
-        if (pageAttr == FOLLOWINGS_PAGE) {
-            new GetMomentRequest(refreshMomentCallback, pageAttr, filterItem, jwt);
-            Log.d("HERE","HERE");
+        if (data.isEmpty()) {
+            if (pageAttr == FOLLOWINGS_PAGE) {
+                new GetMomentRequest(refreshMomentCallback, pageAttr, filterItem, jwt, -1);
+            } else if (pageAttr == TAGGED_PAGE)
+                new GetMomentRequest(refreshMomentCallback, pageAttr, tagItem, filterItem, jwt, -1);
+            else
+                new GetMomentRequest(refreshMomentCallback, pageAttr, jwt, -1);
         }
-        else if (pageAttr == TAGGED_PAGE)
-            new GetMomentRequest(refreshMomentCallback, pageAttr, tagItem, filterItem, jwt);
-        else
-            new GetMomentRequest(refreshMomentCallback, pageAttr, jwt);
+        else {
+            int lastId = data.get(data.size() - 1).id;
+            if (pageAttr == FOLLOWINGS_PAGE) {
+                new GetMomentRequest(refreshMomentCallback, pageAttr, filterItem, jwt, lastId);
+            } else if (pageAttr == TAGGED_PAGE)
+                new GetMomentRequest(refreshMomentCallback, pageAttr, tagItem, filterItem, jwt, lastId);
+            else
+                new GetMomentRequest(refreshMomentCallback, pageAttr, jwt, lastId);
+        }
     }
 
     @Override
@@ -257,9 +284,7 @@ public class TimelineFragment extends Fragment {
                 }
                 if (index == -1) return;
                 this.data.set(index, timelineModel);
-
                 adapter.notifyDataSetChanged();
-
         }
     }
 

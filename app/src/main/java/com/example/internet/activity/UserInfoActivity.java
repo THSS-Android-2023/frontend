@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.internet.R;
 import com.example.internet.adapter.list.TimelineListAdapter;
@@ -80,6 +81,9 @@ public class UserInfoActivity extends AppCompatActivity {
 
     @BindView(R.id.username)
     TextView username_textview;
+
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     String jwt;
 
@@ -236,24 +240,31 @@ public class UserInfoActivity extends AppCompatActivity {
 
                 JSONArray jsonArray = new JSONArray(responseBody);
 
-                data.clear();
+                List<TimelineModel> newData = new ArrayList<>();
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     Log.d("responseBody", jsonObject.toString());
-
                     TimelineModel moment = new TimelineModel(jsonObject);
-                    data.add(moment);
-                    Log.d("moment len", data.size() + "");
+                    newData.add(moment);
                 }
+                if (newData.size() == 0) return;
+                for (int i = 0; i < data.size(); i++){
+                    if (data.get(i).id == newData.get(0).id)
+                        return;
+                }
+                data.addAll(newData);
+
+            } catch(Exception e){
+                e.printStackTrace();
+            } finally {
                 UserInfoActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
                         adapter.notifyDataSetChanged();
                     }
                 });
-            } catch(Exception e){
-                e.printStackTrace();
             }
         }
     };
@@ -342,10 +353,20 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // 在这里触发对后端的请求
+                data.clear();
+                new GetInfoRequest(updateInfoCallback, username, jwt);
+                new GetMomentRequest(getUserMomentCallback, username, jwt, -1);
+            }
+        });
+
 
         new GetInfoRequest(updateInfoCallback, username, jwt);
 
-        new GetMomentRequest(getUserMomentCallback, username, jwt);
+        new GetMomentRequest(getUserMomentCallback, username, jwt, -1);
 
     }
 }
