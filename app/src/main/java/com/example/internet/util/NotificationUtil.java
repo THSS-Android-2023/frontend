@@ -47,7 +47,6 @@ public class NotificationUtil {
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
 
                 }
-
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     if (response.code() != 200) {

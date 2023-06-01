@@ -8,15 +8,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.internet.request.GetNoticeRequest;
 import com.example.internet.request.GetSystemNoticeRequest;
-import com.example.internet.util.ErrorDialog;
-import com.example.internet.util.NotificationUtil;
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
+import com.example.internet.util.Global;
 
 import java.io.IOException;
 
@@ -26,7 +20,7 @@ import okhttp3.Response;
 
 public class NotificationService extends Service {
 
-    private static final long POLL_INTERVAL = 1 * 1000; // 10秒钟的轮询间隔
+    private static final long POLL_INTERVAL = Global.POLLING_INTERVAL * 1000; // 10秒钟的轮询间隔
     private Handler handler;
     private Runnable runnable;
 
@@ -70,8 +64,6 @@ public class NotificationService extends Service {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
-
                     }
                 }, jwt);
                 handler.postDelayed(this, POLL_INTERVAL);

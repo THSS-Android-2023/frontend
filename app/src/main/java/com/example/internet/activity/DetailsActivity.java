@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,6 +34,16 @@ import com.example.internet.request.UnfollowUserRequest;
 import com.example.internet.request.UnlikeMomentRequest;
 import com.example.internet.request.UnstarMomentRequest;
 import com.example.internet.util.ErrorDialog;
+import com.example.internet.util.Global;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.jaeger.ninegridimageview.NineGridImageView;
 import com.jaeger.ninegridimageview.NineGridImageViewAdapter;
@@ -52,7 +64,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class DetailsActivity extends BaseActivity {
+public class DetailsActivity extends BaseActivity{
     @BindView(R.id.detail_username)TextView usernameView;
 
     @BindView(R.id.detail_avatar)ImageView avatarView;
@@ -93,7 +105,7 @@ public class DetailsActivity extends BaseActivity {
     LinearLayout starLayout;
 
     @BindView(R.id.share_layout)
-    LinearLayout shareList;
+    LinearLayout shareLayout;
 
     @BindView(R.id.comment_edit)
     EditText commentEdit;
@@ -117,6 +129,16 @@ public class DetailsActivity extends BaseActivity {
     TimelineModel timelineModel;
 
     private Context ctx = this;
+
+    @BindView(R.id.video_player)
+    PlayerView playerView;
+
+    private MediaSource buildMediaSource(Uri uri) {
+        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this,
+                Util.getUserAgent(this, "YourApplicationName"));
+        return new ProgressiveMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(uri);
+    }
 
     void changeBtnState(Boolean following){
         if (!following){
@@ -382,11 +404,47 @@ public class DetailsActivity extends BaseActivity {
         }
     };
 
+    SimpleExoPlayer player;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
+
+        player = new SimpleExoPlayer.Builder(this, new DefaultRenderersFactory(this)).build();
+        playerView.setPlayer(player);
+        MediaSource mediaSource = buildMediaSource(Uri.parse(Global.VIDEO_TEST_URL));
+        // 准备播放器并设置媒体源
+        player.prepare(mediaSource);
+        player.setPlayWhenReady(true);
+        playerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                // 获取视频的宽高
+                int videoWidth = player.getVideoSize().width;
+                int videoHeight = player.getVideoSize().height;
+
+                // 获取 PlayerView 的宽高
+                int viewWidth = right - left;
+                int viewHeight = bottom - top;
+
+                // 计算视频的宽高比
+                float videoAspectRatio = (videoHeight == 0) ? 1 : (float) videoWidth / videoHeight;
+
+                // 根据视频的宽高比调整 PlayerView 的大小
+                if (viewHeight <= viewWidth / videoAspectRatio && (int) (viewWidth / videoAspectRatio) <= 1600) {
+                    ViewGroup.LayoutParams layoutParams = playerView.getLayoutParams();
+                    layoutParams.height = (int) (viewWidth / videoAspectRatio);
+                    playerView.setLayoutParams(layoutParams);
+                } else {
+                    ViewGroup.LayoutParams layoutParams = playerView.getLayoutParams();
+                    layoutParams.width = (int) (viewHeight * videoAspectRatio);
+                    playerView.setLayoutParams(layoutParams);
+                }
+            }
+        });
+
 
         Log.d("DetailsActivity", "onCreate: ");
 
@@ -518,6 +576,19 @@ public class DetailsActivity extends BaseActivity {
             }
         });
 
+        shareLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT, timelineModel.title);
+                sendIntent.putExtra(Intent.EXTRA_TEXT,   timelineModel.content + "\n--------\n" + "来自" + timelineModel.username + "的分享");
+                sendIntent.setType("text/plain");
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
+            }
+        });
+
         changeBtnState(timelineModel.isFollow);
 
         if (timelineModel.username.equals(username)) {
@@ -543,6 +614,7 @@ public class DetailsActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d("DetailsActivity", "onDestroy: ");
+        player.release();
     }
 
     @Override
