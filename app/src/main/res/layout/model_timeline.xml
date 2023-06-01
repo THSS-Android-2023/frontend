@@ -88,10 +88,37 @@
         app:imgGap="4dp"
         app:showStyle="fill"
         app:singleImgSize="120dp"/>
+    <LinearLayout
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_nine_grid"
+        android:layout_marginLeft="10dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/baseline_location_on_24"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="16dp"
+            />
+        <TextView
+            android:id="@+id/location_text"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text="未知位置"
+            android:textSize="16dp"/>
+    </LinearLayout>
 
     <LinearLayout
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_nine_grid"
+        app:layout_constraintTop_toBottomOf="@id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 

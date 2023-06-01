@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.internet.R;
 import com.example.internet.request.LoginRequest;
+import com.example.internet.service.NotificationService;
 import com.example.internet.util.ErrorDialog;
 import com.example.internet.request.BaseRequest;
 
@@ -27,7 +28,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     @BindView(R.id.login_account)
     EditText username_edit;
@@ -66,6 +67,12 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(context, MainActivity.class);
                 intent.putExtra("username", usr);
                 intent.putExtra("jwt", jwt);
+
+                Intent serviceIntent = new Intent(context, NotificationService.class);
+                serviceIntent.putExtra("jwt", jwt);
+                serviceIntent.putExtra("username", usr);
+                startService(serviceIntent);
+
                 startActivity(intent);
             }
 

@@ -17,7 +17,7 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ChattingActivity extends AppCompatActivity implements MessagesListAdapter.OnLoadMoreListener{
+public class ChattingActivity extends BaseActivity implements MessagesListAdapter.OnLoadMoreListener{
     private MessagesList messagesList;
     private MessageInput input;
 
@@ -28,7 +28,6 @@ public class ChattingActivity extends AppCompatActivity implements MessagesListA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        NotificationUtil.notify(this, this);
         setContentView(R.layout.activity_chatting);
 
         messagesList = findViewById(R.id.messagesList);

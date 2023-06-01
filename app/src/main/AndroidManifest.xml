@@ -57,6 +57,11 @@
         <activity android:name=".activity.DetailsActivity"
             android:parentActivityName=".activity.MainActivity"/>
 
+        <service
+            android:name=".service.NotificationService"
+            android:enabled="true"
+            android:exported="false" />
+
     </application>
 
 </manifest>

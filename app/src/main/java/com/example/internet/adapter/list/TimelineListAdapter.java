@@ -44,6 +44,11 @@ public class TimelineListAdapter extends BaseListAdapter<TimelineModel>{
         else
             holder.setImageResource(R.id.star_view, R.drawable.star_grey);
 
+        if (!item.location.isEmpty())
+            holder.setText(R.id.location_text, item.location);
+        else
+            holder.getView(R.id.location_text).setVisibility(View.GONE);
+
 
         ImageView avatarIv = holder.getView(R.id.avatar);
         Picasso.get().load(item.avatar).into(avatarIv);

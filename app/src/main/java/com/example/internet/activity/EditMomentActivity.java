@@ -60,7 +60,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class EditMomentActivity extends AppCompatActivity implements LocationListener {
+public class EditMomentActivity extends BaseActivity implements LocationListener {
 
     final Context ctx = this;
     private Dialog mDialog;
@@ -77,9 +77,9 @@ public class EditMomentActivity extends AppCompatActivity implements LocationLis
     // Name of shared preferences file
     private String sharedPrefFile =
             "com.example.android.hellosharedprefs";
-    private String mSharedText;
-    private String mSharedTitle;
-    private String mSharedImg;
+    private String mSharedText = "";
+    private String mSharedTitle = "";
+    private String mSharedImg = "";
     private String mSharedTag = "";
     private String mSharedLoc = "";
     // Shared preferences object

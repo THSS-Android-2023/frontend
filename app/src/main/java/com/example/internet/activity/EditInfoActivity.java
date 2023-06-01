@@ -44,7 +44,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class EditInfoActivity extends AppCompatActivity {
+public class EditInfoActivity extends BaseActivity {
 
 
     final Context ctx = this;

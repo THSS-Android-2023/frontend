@@ -16,7 +16,7 @@ import com.example.internet.adapter.pager.BottomAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private String username;
     public String jwt;

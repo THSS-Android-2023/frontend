@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class FollowingActivity extends AppCompatActivity {
+public class FollowingActivity extends BaseActivity {
 
     @BindView(R.id.recyclerview)
     RecyclerView recyclerView;

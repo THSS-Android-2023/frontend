@@ -52,7 +52,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends BaseActivity {
     @BindView(R.id.detail_username)TextView usernameView;
 
     @BindView(R.id.detail_avatar)ImageView avatarView;
@@ -62,6 +62,8 @@ public class DetailsActivity extends AppCompatActivity {
     @BindView(R.id.detail_title) TextView titleView;
 
     @BindView(R.id.detail_content) TextView contentView;
+
+    @BindView(R.id.location_text) TextView locationView;
 
     @BindView(R.id.recyclerview)
     RecyclerView recyclerView;
@@ -411,6 +413,10 @@ public class DetailsActivity extends AppCompatActivity {
 
         titleView.setText(timelineModel.title);
         contentView.setText(timelineModel.content);
+        if (!timelineModel.location.isEmpty())
+            locationView.setText(timelineModel.location);
+        else
+            locationView.setVisibility(View.GONE);
 
 
         final Markwon markwon = Markwon.create(this);
@@ -443,6 +449,7 @@ public class DetailsActivity extends AppCompatActivity {
         commentNum.setText("" + timelineModel.numComments);
         likeNum.setText("" + timelineModel.numLikes);
         starNum.setText("" + timelineModel.numStars);
+
 
 
 
