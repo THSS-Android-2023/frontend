@@ -163,12 +163,10 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -180,12 +178,10 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
         editTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -196,10 +192,12 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
 
         spinner = findViewById(R.id.tag_spinner);
         spinner.setItems(Global.TAG_LIST);
+        spinner.setSelectedIndex(0);
+        mSharedTag=Global.TAG_LIST.get(0);
         spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+//                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
                 mSharedTag = item;
             }
         });
@@ -216,7 +214,6 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
 
         img.setOnClickListener(new View.OnClickListener() {
@@ -254,7 +251,6 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
                     // 权限拒绝，不能执行任务
                     Log.d("Editor", "权限拒绝，不能执行任务");
                 }
-                return;
             }
             default:
                 // 其他权限的处理

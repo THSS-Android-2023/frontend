@@ -31,7 +31,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 NotificationModel notificationModel = new NotificationModel(jsonObject);
-                NotificationUtil.notify(activity, activity, 0, notificationModel.id, jwt, username, "CampusXpress", notificationModel.content);
+                NotificationUtil.notify(activity,  notificationModel.type, notificationModel.id, jwt, username, notificationModel.username, "CampusXpress", notificationModel.content);
             }
         } catch (Exception e) {
             e.printStackTrace();

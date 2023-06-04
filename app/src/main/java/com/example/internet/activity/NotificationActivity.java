@@ -128,6 +128,13 @@ public class NotificationActivity extends BaseActivity {
             if (model.type != 0){
                 new GetMomentRequest(getDetailsCallback, jwt, model.id);
             }
+            else{
+                Intent intent = new Intent(NotificationActivity.this, ChattingActivity.class);
+                intent.putExtra("jwt", jwt);
+                intent.putExtra("username", username);
+                intent.putExtra("target", model.username);
+                startActivity(intent);
+            }
         });
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);

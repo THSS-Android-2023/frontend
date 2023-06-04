@@ -353,6 +353,17 @@ public class UserInfoActivity extends BaseActivity {
             }
         });
 
+        chatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserInfoActivity.this, ChattingActivity.class);
+                intent.putExtra("jwt", jwt);
+                intent.putExtra("username", username);
+                intent.putExtra("target", curUsername);
+                startActivity(intent);
+            }
+        });
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

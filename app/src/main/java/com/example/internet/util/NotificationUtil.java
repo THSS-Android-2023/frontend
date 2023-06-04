@@ -39,9 +39,9 @@ public class NotificationUtil {
         }
     }
 
-    // type = 0 for details page, type = 1 for chatting page
-    public static void notify(AppCompatActivity fromActivity, AppCompatActivity toActivity, int type, int id, String jwt, String username, String title, String content){
-        if (type == 0) {
+    // type = 1,2,3 for details page, type = 0 for chatting page
+    public static void notify(AppCompatActivity fromActivity, int type, int id, String jwt, String username, String target, String title, String content){
+        if (type != 0) {
             new GetMomentRequest(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -79,6 +79,23 @@ public class NotificationUtil {
                 }
             }, jwt, id);
 
+        }
+        else {
+            Intent intent = new Intent(fromActivity, DetailsActivity.class);
+            intent.putExtra("jwt", jwt);
+            intent.putExtra("username", username);
+            intent.putExtra("target", username);
+            PendingIntent pendingIntent = PendingIntent.getActivity(fromActivity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            String channelId = createNotificationChannel(fromActivity, "my_channel_ID", "my_channel_NAME", NotificationManager.IMPORTANCE_HIGH);
+            NotificationCompat.Builder notification = new NotificationCompat.Builder(fromActivity, channelId)
+                    .setContentTitle(title)
+                    .setContentText(content)
+                    .setContentIntent(pendingIntent)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setAutoCancel(true);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(fromActivity);
+            notificationManager.notify(100, notification.build());
         }
     }
 

@@ -28,9 +28,9 @@ public class NotificationModel {
             String str = jsonObject.getString("content");
             if (type == 0){
                 if (str.length() > 10)
-                    this.content = str.subSequence(0, 10) + "...";
+                    this.content = username + "私信了你：" + str.subSequence(0, 10) + "...";
                 else
-                    this.content = str;
+                    this.content = username + "私信了你：" + str;
             }
             else if (type == 1){
                 id = Integer.valueOf(str);
