@@ -111,6 +111,7 @@ public class EditInfoActivity extends BaseActivity {
             else {
                 AppCompatActivity appCtx = (AppCompatActivity) ctx;
                 appCtx.finish();
+                overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }
         }
     };
@@ -206,5 +207,6 @@ public class EditInfoActivity extends BaseActivity {
         intent.putExtra("username", username);
         intent.putExtra("jwt", jwt);
         startActivity(intent);
+        overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
     }
 }

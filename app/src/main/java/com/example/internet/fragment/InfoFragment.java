@@ -1,7 +1,11 @@
 package com.example.internet.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +25,7 @@ import com.example.internet.R;
 import com.example.internet.activity.DetailsActivity;
 import com.example.internet.activity.EditInfoActivity;
 import com.example.internet.activity.FollowingActivity;
+import com.example.internet.activity.LoginActivity;
 import com.example.internet.activity.MainActivity;
 import com.example.internet.adapter.list.TimelineListAdapter;
 import com.example.internet.model.TimelineModel;
@@ -72,6 +77,8 @@ public class InfoFragment extends Fragment {
     @BindView(R.id.followers_num)
     TextView followers_num_text;
 
+    @BindView(R.id.exit_button)
+    Button exit_button;
     @BindView(R.id.edit_button)
     Button edit_button;
 
@@ -202,6 +209,7 @@ public class InfoFragment extends Fragment {
                 Intent intent = new Intent(ctx, FollowingActivity.class);
                 intent.putExtra("jwt", ctx.jwt);
                 startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }
         });
         edit_button.setOnClickListener(new View.OnClickListener() {
@@ -213,6 +221,7 @@ public class InfoFragment extends Fragment {
                 intent.putExtra("avatar", avatar_url);
                 intent.putExtra("jwt", ctx.jwt);
                 startActivityForResult(intent, EDIT_ACTIVITY_REQUEST_CODE);
+                ctx.overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }
         });
 
@@ -230,6 +239,7 @@ public class InfoFragment extends Fragment {
             intent.putExtra("username", username);
             intent.putExtra("timelineModelJson", jsonString);
             startActivity(intent);
+            ctx.overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
         });
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);
@@ -241,6 +251,33 @@ public class InfoFragment extends Fragment {
                 data.clear();
                 new GetInfoRequest(updateInfoCallback, username, ctx.jwt);
                 new GetMomentRequest(getUserMomentCallback, username, ctx.jwt, -1);
+            }
+        });
+
+        exit_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(ctx)
+                        .setTitle("退出登录")
+                        .setMessage("确定要退出登录吗？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                SharedPreferences sharedPreferences = ctx.getSharedPreferences("user", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putBoolean("login", false);
+                                editor.putString("username", "");
+                                editor.putString("password", "");
+                                editor.putString("jwt", "");
+                                editor.apply();
+                                Intent intent = new Intent(ctx, LoginActivity.class);
+                                startActivity(intent);
+                                ctx.finish();
+                                ctx.overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
             }
         });
 

@@ -77,6 +77,7 @@ public class ResetPasswordActivity extends BaseActivity {
                         editor.apply();
                     }
                     finish();
+                    overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
                 }
             };
             new ChangePasswordRequest(resetPasswordCallback, usr, pwd, pwd1);

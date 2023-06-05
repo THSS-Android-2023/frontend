@@ -97,6 +97,7 @@ public class NotificationActivity extends BaseActivity {
                     intent.putExtra("jwt", jwt);
                     intent.putExtra("username", username);
                     startActivity(intent);
+                    overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
                 });
             }
             catch (Exception e) {
@@ -134,6 +135,7 @@ public class NotificationActivity extends BaseActivity {
                 intent.putExtra("username", username);
                 intent.putExtra("target", model.username);
                 startActivity(intent);
+                overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }
         });
         adapter.setManager(recyclerView);

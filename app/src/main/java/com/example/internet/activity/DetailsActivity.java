@@ -573,6 +573,7 @@ public class DetailsActivity extends BaseActivity{
                 intent.putExtra("curUsername", timelineModel.username);
                 intent.putExtra("jwt", jwt);
                 startActivity(intent);
+                overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }
         });
 
@@ -586,6 +587,7 @@ public class DetailsActivity extends BaseActivity{
                 sendIntent.setType("text/plain");
                 Intent shareIntent = Intent.createChooser(sendIntent, null);
                 startActivity(shareIntent);
+                overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }
         });
 
@@ -625,5 +627,6 @@ public class DetailsActivity extends BaseActivity{
         intent.putExtra("timelineModelJson", json);
         setResult(Activity.RESULT_OK, intent);
         finish();
+        overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
     }
 }

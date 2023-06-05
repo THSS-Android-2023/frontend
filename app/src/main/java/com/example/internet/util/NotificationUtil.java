@@ -13,6 +13,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.internet.R;
+import com.example.internet.activity.ChattingActivity;
 import com.example.internet.activity.DetailsActivity;
 import com.example.internet.model.TimelineModel;
 import com.example.internet.request.GetMomentRequest;
@@ -81,10 +82,10 @@ public class NotificationUtil {
 
         }
         else {
-            Intent intent = new Intent(fromActivity, DetailsActivity.class);
+            Intent intent = new Intent(fromActivity, ChattingActivity.class);
             intent.putExtra("jwt", jwt);
             intent.putExtra("username", username);
-            intent.putExtra("target", username);
+            intent.putExtra("target", target);
             PendingIntent pendingIntent = PendingIntent.getActivity(fromActivity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             String channelId = createNotificationChannel(fromActivity, "my_channel_ID", "my_channel_NAME", NotificationManager.IMPORTANCE_HIGH);
             NotificationCompat.Builder notification = new NotificationCompat.Builder(fromActivity, channelId)

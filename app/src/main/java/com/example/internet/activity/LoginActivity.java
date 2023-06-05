@@ -41,6 +41,8 @@ public class LoginActivity extends BaseActivity {
     String pwd = "";
     String jwt = "";
 
+    Boolean withoutAnim = false;
+
     Callback loginCallback = new Callback() {
         @Override
         public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -62,6 +64,7 @@ public class LoginActivity extends BaseActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("login", true);
                 editor.putString("username", usr);
+                editor.putString("password", pwd);
                 editor.putString("jwt", jwt);
                 editor.apply();
                 Intent intent = new Intent(context, MainActivity.class);
@@ -74,6 +77,8 @@ public class LoginActivity extends BaseActivity {
                 startService(serviceIntent);
 
                 startActivity(intent);
+                if (!withoutAnim)
+                    overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }
 
         }
@@ -82,24 +87,24 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-//        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
-//        boolean hasLogin = sharedPreferences.getBoolean("login", false);
-//        if (hasLogin){
-//            usr = sharedPreferences.getString("username", "");
-//            pwd = sharedPreferences.getString("password", "");
-//            HTTPRequest loginRequest = new HTTPRequest();
-//            loginRequest.addParam("username", usr);
-//            loginRequest.addParam("password", pwd);
-//            loginRequest.post(loginUrl, loginCallback);
-//        }
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        boolean hasLogin = sharedPreferences.getBoolean("login", false);
+        if (hasLogin){
+            withoutAnim = true;
+            usr = sharedPreferences.getString("username", "");
+            pwd = sharedPreferences.getString("password", "");
+            new LoginRequest(usr, pwd, loginCallback);
+        }
     }
 
     public void onRegisterClick(View v){
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
     }
 
     public void onLoginClick(View v){

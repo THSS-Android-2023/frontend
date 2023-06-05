@@ -82,6 +82,7 @@ public class HomepageFragment extends Fragment {
                 Intent intent = new Intent(ctx, SearchActivity.class);
                 intent.putExtra("jwt", jwt);
                 startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }
         });
 
@@ -92,6 +93,7 @@ public class HomepageFragment extends Fragment {
                 intent.putExtra("jwt", jwt);
                 intent.putExtra("username", ((MainActivity) getActivity()).getUsername());
                 startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }
         });
         return view;

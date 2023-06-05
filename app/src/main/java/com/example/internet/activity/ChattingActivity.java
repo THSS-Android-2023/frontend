@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.internet.R;
 import com.example.internet.model.MessageModel;
@@ -31,7 +32,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class ChattingActivity extends BaseActivity implements MessagesListAdapter.OnLoadMoreListener{
+public class ChattingActivity extends AppCompatActivity implements MessagesListAdapter.OnLoadMoreListener{
     private MessagesList messagesList;
     private MessageInput input;
 
