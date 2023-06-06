@@ -2,8 +2,10 @@ package com.example.internet.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -22,10 +24,13 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +43,13 @@ import com.example.internet.request.PublishMomentRequest;
 import com.example.internet.util.ErrorDialog;
 import com.example.internet.util.FileUtils;
 import com.example.internet.util.Global;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.google.android.material.snackbar.Snackbar;
 import com.jaeger.ninegridimageview.NineGridImageView;
 import com.jaeger.ninegridimageview.NineGridImageViewAdapter;
@@ -65,6 +77,7 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
     final Context ctx = this;
     private Dialog mDialog;
     private static final int SELECT_PHOTO = 100;
+    private static final int SELECT_VIDEO = 200;
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 101;
 
     private EditText editText;
@@ -80,16 +93,25 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
     private String mSharedText = "";
     private String mSharedTitle = "";
     private String mSharedImg = "";
+    private String mSharedVid = "";
     private String mSharedTag = "";
     private String mSharedLoc = "";
     // Shared preferences object
     private SharedPreferences mPreferences;
     private Uri imageUri = null;
+    private Uri videoUri = null;
 
     private MaterialSpinner spinner;
 
     private List<String> uriList = new ArrayList<>();
     private NineGridImageView<String> nineGridImageView;
+
+    private PlayerView playerView;
+    private SimpleExoPlayer player;
+
+    private AlertDialog.Builder builder;
+    private ImageView img;
+
     private NineGridImageViewAdapter<String> mAdapter = new NineGridImageViewAdapter<String>() {
         @Override
         protected void onDisplayImage(Context context, ImageView imageView, String photo) {
@@ -145,6 +167,48 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
 
         jwt = getIntent().getStringExtra("jwt");
 
+        builder = new AlertDialog.Builder(this);
+        builder.setTitle("请选择上传文件类型");
+
+        RadioGroup radioGroup = new RadioGroup(this);
+        radioGroup.setOrientation(RadioGroup.VERTICAL);
+
+        RadioButton option1 = new RadioButton(this);
+        option1.setText("图片");
+
+        RadioButton option2 = new RadioButton(this);
+        option2.setText("视频");
+
+        radioGroup.addView(option1);
+        radioGroup.addView(option2);
+
+        builder.setView(radioGroup);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 当用户点击确定按钮时，获取用户选择的选项
+                int selectedId = radioGroup.getCheckedRadioButtonId();
+                if (selectedId == option1.getId()) {
+                    Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    photoPickerIntent.setType("image/*");
+                    startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+                    // 用户选择了选项1
+                } else if (selectedId == option2.getId()) {
+                    // 用户选择了选项2
+                    Intent videoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    videoPickerIntent.setType("video/*");
+                    startActivityForResult(videoPickerIntent, SELECT_VIDEO);
+                }
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 当用户点击取消按钮时，关闭对话框
+                dialog.dismiss();
+            }
+        });
+
         String TAG = "loc";
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
@@ -193,10 +257,11 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
         spinner = findViewById(R.id.tag_spinner);
         spinner.setItems(Global.TAG_LIST);
         spinner.setSelectedIndex(0);
-        mSharedTag=Global.TAG_LIST.get(0);
+        mSharedTag = Global.TAG_LIST.get(0);
         spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
-            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
 //                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
                 mSharedTag = item;
             }
@@ -205,7 +270,7 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
             spinner.setSelectedIndex(Global.TAG_LIST.indexOf(mSharedTag));
         }
 
-        ImageView img = findViewById(R.id.iv_post_image);
+        img = findViewById(R.id.iv_post_image);
         if (!mSharedImg.isEmpty()) {
             try {
                 Uri uri = Uri.parse((String) mSharedImg);
@@ -216,12 +281,28 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
             }
         }
 
+        if (!mSharedVid.isEmpty()) {
+            Uri uri = Uri.parse((String) mSharedVid);
+            MediaSource mediaSource = buildMediaSource(uri);
+            // 准备播放器并设置媒体源
+            player.prepare(mediaSource);
+            player.setPlayWhenReady(true);
+        }
+
+//        img.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+//                photoPickerIntent.setType("image/*");
+//                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+//            }
+//        });
+
         img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
@@ -234,6 +315,45 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
         nineGridImageView = findViewById(R.id.iv_nine_grid);
         nineGridImageView.setAdapter(mAdapter);
         nineGridImageView.setImagesData(uriList);
+
+        playerView = findViewById(R.id.video_player);
+        player = new SimpleExoPlayer.Builder(this, new DefaultRenderersFactory(this)).build();
+        playerView.setPlayer(player);
+
+        playerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                // 获取视频的宽高
+                int videoWidth = player.getVideoSize().width;
+                int videoHeight = player.getVideoSize().height;
+
+                // 获取 PlayerView 的宽高
+                int viewWidth = right - left;
+                int viewHeight = bottom - top;
+
+                // 计算视频的宽高比
+                float videoAspectRatio = (videoHeight == 0) ? 1 : (float) videoWidth / videoHeight;
+
+                // 根据视频的宽高比调整 PlayerView 的大小
+                if (viewHeight <= viewWidth / videoAspectRatio && (int) (viewWidth / videoAspectRatio) <= 1600) {
+                    ViewGroup.LayoutParams layoutParams = playerView.getLayoutParams();
+                    layoutParams.height = (int) (viewWidth / videoAspectRatio);
+                    playerView.setLayoutParams(layoutParams);
+                } else {
+                    ViewGroup.LayoutParams layoutParams = playerView.getLayoutParams();
+                    layoutParams.width = (int) (viewHeight * videoAspectRatio);
+                    playerView.setLayoutParams(layoutParams);
+                }
+            }
+        });
+
+    }
+
+    private MediaSource buildMediaSource(Uri uri) {
+        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this,
+                Util.getUserAgent(this, "YourApplicationName"));
+        return new ProgressiveMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(uri);
     }
 
     @Override
@@ -262,6 +382,8 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK) {
+            playerView.setVisibility(View.GONE);
+            img.setVisibility(View.GONE);
             imageUri = data.getData();
             mSharedImg = imageUri.toString();
             ImageView mImageView = findViewById(R.id.iv_post_image);
@@ -276,6 +398,16 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else if (requestCode == SELECT_VIDEO && resultCode == RESULT_OK) {
+            playerView.setVisibility(View.VISIBLE);
+            img.setVisibility(View.GONE);
+            videoUri = data.getData();
+            mSharedVid = videoUri.toString();
+            Log.d("vid uri", videoUri.toString());
+            MediaSource mediaSource = buildMediaSource(videoUri);
+            // 准备播放器并设置媒体源
+            player.prepare(mediaSource);
+            player.setPlayWhenReady(true);
         }
     }
 
@@ -289,18 +421,21 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
         putPreference();
     }
 
-    void loadPreference(){
+    void loadPreference() {
         mSharedText = mPreferences.getString("text", "");
         mSharedTitle = mPreferences.getString("title", "");
         mSharedImg = mPreferences.getString("img", "");
+        mSharedVid = mPreferences.getString("vid", "");
         mSharedTag = mPreferences.getString("tag", "");
         mSharedLoc = mPreferences.getString("loc", "");
     }
-    void putPreference(){
+
+    void putPreference() {
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
         preferencesEditor.putString("text", mSharedText);
         preferencesEditor.putString("title", mSharedTitle);
         preferencesEditor.putString("img", mSharedImg);
+        preferencesEditor.putString("vid", mSharedVid);
         preferencesEditor.putString("tag", mSharedTag);
         preferencesEditor.putString("loc", mSharedLoc);
         preferencesEditor.apply();
@@ -350,9 +485,10 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
             if (code != 200 && code != 201)
                 new ErrorDialog(ctx, "发表失败：" + response.message());
             try {
-                mSharedText="";
-                mSharedImg="";
-                mSharedTitle="";
+                mSharedText = "";
+                mSharedImg = "";
+                mSharedVid = "";
+                mSharedTitle = "";
                 putPreference();
                 AppCompatActivity appCtx = (AppCompatActivity) ctx;
                 appCtx.finish();

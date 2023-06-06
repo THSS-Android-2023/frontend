@@ -110,6 +110,7 @@
                 app:layout_constraintTop_toBottomOf="@id/detail_content"
                 app:showStyle="fill"
                 app:singleImgSize="120dp" />
+
             <FrameLayout
                 android:id="@+id/player_container"
                 android:layout_width="match_parent"
