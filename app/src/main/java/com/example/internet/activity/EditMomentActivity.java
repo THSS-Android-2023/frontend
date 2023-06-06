@@ -492,6 +492,7 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
                 putPreference();
                 AppCompatActivity appCtx = (AppCompatActivity) ctx;
                 appCtx.finish();
+                overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -325,6 +325,7 @@ public class UserInfoActivity extends BaseActivity {
             newIntent.putExtra("username", username);
             newIntent.putExtra("timelineModelJson", jsonString);
             startActivity(newIntent);
+            overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
         });
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);
@@ -361,6 +362,7 @@ public class UserInfoActivity extends BaseActivity {
                 intent.putExtra("username", username);
                 intent.putExtra("target", curUsername);
                 startActivity(intent);
+                overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }
         });
 

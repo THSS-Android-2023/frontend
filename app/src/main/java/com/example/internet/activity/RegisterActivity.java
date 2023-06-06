@@ -1,5 +1,7 @@
 package com.example.internet.activity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -43,7 +45,14 @@ public class RegisterActivity extends BaseActivity {
             catch (JSONException e){
                 Log.d("Error", e.toString());
             }
+            SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("login", true);
+            editor.putString("username", usr);
+            editor.putString("password", pwd);
+            editor.apply();
             finish();
+            overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
         }
     };
     @Override
@@ -55,10 +64,11 @@ public class RegisterActivity extends BaseActivity {
         password = findViewById(R.id.login_password);
         password2 = findViewById(R.id.login_repeat_password);
     }
-
+    String usr;
+    String pwd;
     public void onRegisterClick(View v){
-        String usr = username.getText().toString();
-        String pwd = password.getText().toString();
+        usr = username.getText().toString();
+        pwd = password.getText().toString();
         String pwd2 = password2.getText().toString();
         if (!pwd.equals(pwd2)){
             ErrorDialog error = new ErrorDialog(this, "两次密码不一致");

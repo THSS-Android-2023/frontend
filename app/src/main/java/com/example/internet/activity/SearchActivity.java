@@ -116,6 +116,7 @@ public class SearchActivity extends BaseActivity {
             intent.putExtra("timelineModelJson", json);
             intent.putExtra("jwt", jwt);
             startActivity(intent);
+            overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
         });
 
         adapter.setManager(recyclerView);

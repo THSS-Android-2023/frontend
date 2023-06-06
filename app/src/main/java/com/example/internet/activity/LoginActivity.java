@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -41,6 +43,8 @@ public class LoginActivity extends BaseActivity {
     String pwd = "";
     String jwt = "";
 
+    Boolean withoutAnim = false;
+
     Callback loginCallback = new Callback() {
         @Override
         public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -62,6 +66,7 @@ public class LoginActivity extends BaseActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("login", true);
                 editor.putString("username", usr);
+                editor.putString("password", pwd);
                 editor.putString("jwt", jwt);
                 editor.apply();
                 Intent intent = new Intent(context, MainActivity.class);
@@ -74,6 +79,8 @@ public class LoginActivity extends BaseActivity {
                 startService(serviceIntent);
 
                 startActivity(intent);
+                if (!withoutAnim)
+                    overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }
 
         }
@@ -82,24 +89,24 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-//        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
-//        boolean hasLogin = sharedPreferences.getBoolean("login", false);
-//        if (hasLogin){
-//            usr = sharedPreferences.getString("username", "");
-//            pwd = sharedPreferences.getString("password", "");
-//            HTTPRequest loginRequest = new HTTPRequest();
-//            loginRequest.addParam("username", usr);
-//            loginRequest.addParam("password", pwd);
-//            loginRequest.post(loginUrl, loginCallback);
-//        }
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        boolean hasLogin = sharedPreferences.getBoolean("login", false);
+        if (hasLogin){
+            withoutAnim = true;
+            usr = sharedPreferences.getString("username", "");
+            pwd = sharedPreferences.getString("password", "");
+            new LoginRequest(usr, pwd, loginCallback);
+        }
     }
 
     public void onRegisterClick(View v){
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
     }
 
     public void onLoginClick(View v){
@@ -109,6 +116,22 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         LoginRequest request = new LoginRequest(usr, pwd, loginCallback);
+    }
+
+    private long exitTime = 0;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            if((System.currentTimeMillis()-exitTime) > 2000){
+                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }

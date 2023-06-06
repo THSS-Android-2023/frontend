@@ -56,6 +56,7 @@ public class ChatFragment extends Fragment {
             intent.putExtra("username", ctx.getUsername());
             intent.putExtra("target", dialog.getId());
             startActivity(intent);
+            ctx.overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
         });
 
         dialogsList.setAdapter(dialogsListAdapter);

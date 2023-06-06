@@ -4,6 +4,7 @@ import android.content.IntentFilter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.internet.R;
 import com.example.internet.service.NotificationReceiver;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -23,5 +24,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         unregisterReceiver(receiver);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+    }
 }

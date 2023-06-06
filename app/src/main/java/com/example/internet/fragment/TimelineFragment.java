@@ -166,6 +166,7 @@ public class TimelineFragment extends Fragment {
             intent.putExtra("jwt", jwt);
             intent.putExtra("username", username);
             startActivityForResult(intent, JMP_TO_DETAILS);
+            getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
         });
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);
