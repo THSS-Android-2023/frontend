@@ -417,10 +417,7 @@ public class DetailsActivity extends BaseActivity{
 
         player = new SimpleExoPlayer.Builder(this, new DefaultRenderersFactory(this)).build();
         playerView.setPlayer(player);
-        MediaSource mediaSource = buildMediaSource(Uri.parse(Global.VIDEO_TEST_URL));
-        // 准备播放器并设置媒体源
-        player.prepare(mediaSource);
-        player.setPlayWhenReady(true);
+
         playerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
@@ -485,8 +482,6 @@ public class DetailsActivity extends BaseActivity{
         final Spanned markdown = markwon.render(node);
         markwon.setParsedMarkdown(contentView, markdown);
 
-
-
         nine_grid.setAdapter(new NineGridImageViewAdapter<String>() {
             @Override
             protected void onDisplayImage(Context context, ImageView imageView, String url) {
@@ -505,7 +500,19 @@ public class DetailsActivity extends BaseActivity{
                 super.onItemImageClick(context, index, list);
             }
         });
-        nine_grid.setImagesData(timelineModel.imgUrls);
+
+        if (timelineModel.mp4Url.isEmpty()) {
+            nine_grid.setImagesData(timelineModel.imgUrls);
+            nine_grid.setVisibility(View.VISIBLE);
+            playerView.setVisibility(View.GONE);
+        } else {
+            MediaSource mediaSource = buildMediaSource(Uri.parse(timelineModel.mp4Url));
+            // 准备播放器并设置媒体源
+            player.prepare(mediaSource);
+            player.setPlayWhenReady(true);
+            nine_grid.setVisibility(View.GONE);
+            playerView.setVisibility(View.VISIBLE);
+        }
 
         commentNum.setText("" + timelineModel.numComments);
         likeNum.setText("" + timelineModel.numLikes);
