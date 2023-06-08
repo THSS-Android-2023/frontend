@@ -53,7 +53,11 @@ public class TimelineListAdapter extends BaseListAdapter<TimelineModel>{
         ImageView avatarIv = holder.getView(R.id.avatar);
         Picasso.get().load(item.avatar).into(avatarIv);
 
-        ((MomentDataHolder) holder).bindData(item.imgUrls, item.content);
+        if (item.mp4Url.isEmpty()) {
+            ((MomentDataHolder) holder).bindData(item.imgUrls, item.content);
+        } else {
+            ((MomentDataHolder) holder).bindData(item.mp4Url, item.content);
+        }
 
         ((TextView)holder.getView(R.id.tag)).setText(Global.TAG_CODE2STR_MAP.get(item.tag));
     }

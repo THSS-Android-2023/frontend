@@ -88,12 +88,31 @@
         app:imgGap="4dp"
         app:showStyle="fill"
         app:singleImgSize="120dp"/>
+
+    <FrameLayout
+        android:id="@+id/video_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_nine_grid"
+        android:gravity="center"
+        android:layout_margin="16dp">
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/video_player"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:resize_mode="fit"
+            android:visibility="gone"
+            app:show_buffering="when_playing" />
+    </FrameLayout>
+
+
     <LinearLayout
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_nine_grid"
+        app:layout_constraintTop_toBottomOf="@+id/video_frame"
         android:layout_marginLeft="10dp"
         android:orientation="horizontal">
         <ImageView

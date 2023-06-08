@@ -33,6 +33,8 @@ public class TimelineModel {
     public Boolean isFollow = false;
     public List<String> imgUrls = new ArrayList<>();
 
+    public String mp4Url;
+
     public TimelineModel(JSONObject jsonObject) {
         try {
 //            Log.d("TimelineModel", jsonObject.toString());
@@ -53,6 +55,7 @@ public class TimelineModel {
             isStar = jsonObject.getBoolean("is_current_user_star");
             isLike = jsonObject.getBoolean("is_current_user_like");
             isFollow = jsonObject.getBoolean("is_current_user_following");
+            mp4Url = jsonObject.getString("mp4url");
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

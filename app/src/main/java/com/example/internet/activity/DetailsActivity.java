@@ -120,6 +120,7 @@ public class DetailsActivity extends BaseActivity{
     @BindView(R.id.userinfo)
     LinearLayout userinfoArea;
 
+
     private List<CommentModel> commentData;
     private CommentListAdapter adapter;
 
@@ -411,6 +412,8 @@ public class DetailsActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
+
+
 
         player = new SimpleExoPlayer.Builder(this, new DefaultRenderersFactory(this)).build();
         playerView.setPlayer(player);

@@ -26,8 +26,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="20dp"
                 android:clickable="true"
-                android:text="渲染"
-                android:onClick="onRenderClick"/>
+                android:text="渲染"/>
 
             <Button
                 android:id="@+id/btn_release"
@@ -38,8 +37,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="20dp"
                 android:clickable="true"
-                android:text="发表"
-                android:onClick="onPublishClick"/>
+                android:text="发表"/>
 
         </LinearLayout>
 

@@ -18,6 +18,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Spanned;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -59,12 +61,15 @@ import com.squareup.picasso.Picasso;
 import org.commonmark.node.Node;
 
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
 import io.noties.markwon.Markwon;
 import io.noties.markwon.editor.MarkwonEditor;
 import io.noties.markwon.editor.MarkwonEditorTextWatcher;
@@ -140,6 +145,23 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_moment);
+
+        Button renderButton = findViewById(R.id.btn_render);
+        renderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRenderClick();
+            }
+        });
+
+        Button releaseButton = findViewById(R.id.btn_release);
+        releaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onPublishClick();
+            }
+        });
+
         Boolean b = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
         Log.d("123", String.valueOf(b));
         if (checkSelfPermission(
@@ -402,12 +424,15 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
             playerView.setVisibility(View.VISIBLE);
             img.setVisibility(View.GONE);
             videoUri = data.getData();
+
             mSharedVid = videoUri.toString();
             Log.d("vid uri", videoUri.toString());
             MediaSource mediaSource = buildMediaSource(videoUri);
             // 准备播放器并设置媒体源
             player.prepare(mediaSource);
             player.setPlayWhenReady(true);
+
+            uriList.add(videoUri.toString());
         }
     }
 
@@ -441,17 +466,19 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
         preferencesEditor.apply();
     }
 
-    public void onPublishClick(View view) {
+    public void onPublishClick() {
 //        Intent data = new Intent();
 //        data.putExtra("text", mSharedText);
 //        data.putExtra("img", mSharedImg);
 //        setResult(RESULT_OK, data);
         List<File> imageFiles = new ArrayList<>();
         Log.d("test", "111111");
-//        Log.d("uri_0", uriList.get(0));
+        Log.d("uri_0", uriList.get(0));
         for (String uri : uriList) {
             Uri imageUri = Uri.parse(uri);
+            Log.d("uri", imageUri.toString());
             String path = FileUtils.getPath(this, imageUri);
+            Log.d("path", path);
             File imageFile = new File(path);
             imageFiles.add(imageFile);
         }
@@ -464,7 +491,7 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
 //        finish();
     }
 
-    public void onRenderClick(View view) {
+    public void onRenderClick() {
         final Markwon markwon = Markwon.create(this);
         final Node node = markwon.parse(editText.getText().toString());
         final Spanned markdown = markwon.render(node);
