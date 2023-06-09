@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.internet.R;
 import com.example.internet.activity.DetailsActivity;
 import com.example.internet.activity.MainActivity;
@@ -70,6 +72,9 @@ public class TimelineFragment extends Fragment {
 
     @BindView(R.id.empty_hint)
     TextView emptyHint;
+
+    @BindView(R.id.loadingAnimationView)
+    LottieAnimationView loadingAnimationView;
 
 
     int pageAttr = 0;
@@ -137,7 +142,9 @@ public class TimelineFragment extends Fragment {
                             emptyHint.setVisibility(View.VISIBLE);
                         else
                             emptyHint.setVisibility(View.GONE);
-                        swipeRefreshLayout.bringToFront();
+                        loadingAnimationView.cancelAnimation();
+                        loadingAnimationView.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
                         swipeRefreshLayout.setRefreshing(false);
                         adapter.notifyDataSetChanged();
                     }
@@ -204,6 +211,7 @@ public class TimelineFragment extends Fragment {
             @Override
             public void onRefresh() {
                 // 在这里触发对后端的请求
+//                loadingAnimationView.playAnimation();
                 data.clear();
                 pullMoment();
             }
@@ -262,23 +270,34 @@ public class TimelineFragment extends Fragment {
 
     private void pullMoment(){
 
-        if (data.isEmpty()) {
-            if (pageAttr == FOLLOWINGS_PAGE) {
-                new GetMomentRequest(refreshMomentCallback, pageAttr, filterItem, jwt, -1);
-            } else if (pageAttr == TAGGED_PAGE)
-                new GetMomentRequest(refreshMomentCallback, pageAttr, tagItem, filterItem, jwt, -1);
-            else
-                new GetMomentRequest(refreshMomentCallback, pageAttr, jwt, -1);
-        }
-        else {
-            int lastId = data.get(data.size() - 1).id;
-            if (pageAttr == FOLLOWINGS_PAGE) {
-                new GetMomentRequest(refreshMomentCallback, pageAttr, filterItem, jwt, lastId);
-            } else if (pageAttr == TAGGED_PAGE)
-                new GetMomentRequest(refreshMomentCallback, pageAttr, tagItem, filterItem, jwt, lastId);
-            else
-                new GetMomentRequest(refreshMomentCallback, pageAttr, jwt, lastId);
-        }
+        recyclerView.setVisibility(View.GONE);
+        emptyHint.setVisibility(View.GONE);
+        loadingAnimationView.setVisibility(View.VISIBLE);
+        loadingAnimationView.playAnimation();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (data.isEmpty()) {
+                    if (pageAttr == FOLLOWINGS_PAGE) {
+                        new GetMomentRequest(refreshMomentCallback, pageAttr, filterItem, jwt, -1);
+                    } else if (pageAttr == TAGGED_PAGE)
+                        new GetMomentRequest(refreshMomentCallback, pageAttr, tagItem, filterItem, jwt, -1);
+                    else
+                        new GetMomentRequest(refreshMomentCallback, pageAttr, jwt, -1);
+                }
+                else {
+                    int lastId = data.get(data.size() - 1).id;
+                    if (pageAttr == FOLLOWINGS_PAGE) {
+                        new GetMomentRequest(refreshMomentCallback, pageAttr, filterItem, jwt, lastId);
+                    } else if (pageAttr == TAGGED_PAGE)
+                        new GetMomentRequest(refreshMomentCallback, pageAttr, tagItem, filterItem, jwt, lastId);
+                    else
+                        new GetMomentRequest(refreshMomentCallback, pageAttr, jwt, lastId);
+                }
+            }
+        }, 1000);
+
+
 
     }
 
