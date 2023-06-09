@@ -295,7 +295,7 @@ public class TimelineFragment extends Fragment {
                         new GetMomentRequest(refreshMomentCallback, pageAttr, jwt, lastId);
                 }
             }
-        }, 1000);
+        }, 500);
 
 
 
