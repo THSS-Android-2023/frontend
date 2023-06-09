@@ -25,15 +25,17 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/userinfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/detail_avatar"
-                android:layout_width="110px"
-                android:layout_height="110px"
+                android:layout_width="130px"
+                android:layout_height="130px"
                 android:layout_marginLeft="55px"
                 android:layout_marginTop="40px"
                 android:layout_marginRight="20px"
@@ -41,7 +43,8 @@
                 android:src="@drawable/avatar1" />
 
                 <LinearLayout
-                    android:layout_marginTop="0dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -50,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20px"
-                android:layout_marginTop="40px"
+                android:layout_marginTop="30px"
                 android:text="SweetNow"
                 android:textSize="40px"
                 android:textStyle="bold"
@@ -67,13 +70,24 @@
                 android:text="昨天20:18" />
                 </LinearLayout>
             </LinearLayout>
+            <ImageView
+                android:id="@+id/deleting_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_delete_24"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="35dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
                 <Button
                 android:id="@+id/following_btn"
-                android:layout_width="80dp"
-                android:layout_height="35dp"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
                 android:text="+  关注"
                 android:background="#cccccc"
-                android:layout_marginTop="15dp"
+                    android:textSize="13dp"
+                android:layout_marginTop="25dp"
                 android:layout_marginRight="10dp"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -82,7 +96,7 @@
                 android:id="@+id/detail_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="25dp"
                 android:layout_marginTop="20dp"
                 android:text="【THU春日足迹】"
                 android:textSize="50px"
@@ -94,7 +108,7 @@
                 android:id="@+id/detail_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="25dp"
                 android:layout_marginTop="10dp"
                 android:text="尼康35px，来讨份明信片~"
                 android:textSize="40px"
@@ -105,7 +119,7 @@
                 android:id="@+id/iv_nine_grid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_margin="20dp"
                 app:imgGap="4dp"
                 app:layout_constraintTop_toBottomOf="@id/detail_content"
                 app:showStyle="fill"
@@ -158,6 +172,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
@@ -259,55 +274,44 @@
 
                 </LinearLayout>
             </LinearLayout>
+            <LinearLayout
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linearlayout"
+                android:layout_marginRight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal">
+
+                <!-- 评论输入框、发送按钮等视图 -->
+                <EditText
+                    android:id="@+id/comment_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="25dp"
+                    android:shadowColor="#ffffff"
+                    android:hint="来发表一下你的评论吧~"
+                    android:textSize="15sp"
+                    android:textColorHint="#dddddd"
+                    />
+                <ImageView
+                    android:id="@+id/comment_submit"
+                    android:layout_margin="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/baseline_send_24"/>
+
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="#ffffff"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:background="#ffffff" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="bottom"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        app:elevation="0dp">
-
-        <!-- 底部评论框的布局 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@android:color/white"
-            android:orientation="horizontal">
-
-            <!-- 评论输入框、发送按钮等视图 -->
-            <EditText
-                android:id="@+id/comment_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginLeft="10dp"
-                android:hint="来发表一下你的评论吧~"
-                android:textSize="15sp"
-                android:textColorHint="#dddddd"
-                />
-            <Button
-                android:id="@+id/comment_submit"
-                android:layout_margin="5dp"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:textSize="15sp"
-                android:text="发送"/>
-
-        </LinearLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

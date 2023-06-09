@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -67,9 +68,12 @@ public class TimelineFragment extends Fragment {
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    @BindView(R.id.empty_hint)
+    TextView emptyHint;
+
 
     int pageAttr = 0;
-    String tagItem = "xyzx";
+    String tagItem = Global.TAG_STR2CODE_MAP.get(Global.TAG_LIST.get(0));
 
     String filterItem = "time";
 
@@ -129,6 +133,11 @@ public class TimelineFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (data.isEmpty())
+                            emptyHint.setVisibility(View.VISIBLE);
+                        else
+                            emptyHint.setVisibility(View.GONE);
+                        swipeRefreshLayout.bringToFront();
                         swipeRefreshLayout.setRefreshing(false);
                         adapter.notifyDataSetChanged();
                     }
@@ -189,6 +198,8 @@ public class TimelineFragment extends Fragment {
             }
         });
 
+        swipeRefreshLayout.bringToFront();
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -208,7 +219,7 @@ public class TimelineFragment extends Fragment {
                     new SpinnerTextAdapter(getActivity(), Global.TAG_LIST, 14);
             tagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(tagAdapter);
-            spinner.setSelection(3);
+            spinner.setSelection(0);
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -268,6 +279,7 @@ public class TimelineFragment extends Fragment {
             else
                 new GetMomentRequest(refreshMomentCallback, pageAttr, jwt, lastId);
         }
+
     }
 
     @Override

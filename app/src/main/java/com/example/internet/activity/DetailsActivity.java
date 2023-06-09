@@ -1,7 +1,9 @@
 package com.example.internet.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -15,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +28,7 @@ import com.example.internet.adapter.list.CommentListAdapter;
 import com.example.internet.model.CommentModel;
 import com.example.internet.model.TimelineModel;
 import com.example.internet.request.CheckFollowshipRequest;
+import com.example.internet.request.DeleteMomentRequest;
 import com.example.internet.request.FollowUserRequest;
 import com.example.internet.request.GetCommentRequest;
 import com.example.internet.request.LikeMomentRequest;
@@ -111,10 +115,13 @@ public class DetailsActivity extends BaseActivity{
     EditText commentEdit;
 
     @BindView(R.id.comment_submit)
-    Button commentSubmit;
+    ImageView commentSubmit;
 
     @BindView(R.id.following_btn)
     Button follow_btn;
+
+    @BindView(R.id.deleting_btn)
+    ImageView delete_btn;
 
 
     @BindView(R.id.userinfo)
@@ -405,7 +412,33 @@ public class DetailsActivity extends BaseActivity{
         }
     };
 
+    Callback deleteMomentCallback = new Callback() {
+        @Override
+        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            new ErrorDialog(DetailsActivity.this, "删除失败：" + e.getMessage());
+        }
+
+        @Override
+        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            int code = response.code();
+            Log.d("code", String.valueOf(code));
+            if (code != 200 && code != 201)
+                new ErrorDialog(DetailsActivity.this, "删除失败：" + response.message());
+            else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(DetailsActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+            }
+        }
+    };
+
     SimpleExoPlayer player;
+
+    int momentId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -455,6 +488,7 @@ public class DetailsActivity extends BaseActivity{
 
         Gson gson = new Gson();
         timelineModel = gson.fromJson(jsonString, TimelineModel.class);
+        momentId = timelineModel.id;
 
         usernameView.setText(timelineModel.username);
 //        avatarView.setImageResource(timelineModel.avatar);
@@ -605,8 +639,26 @@ public class DetailsActivity extends BaseActivity{
 
         if (timelineModel.username.equals(username)) {
             follow_btn.setVisibility(View.GONE);
+            delete_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new AlertDialog.Builder(DetailsActivity.this)
+                            .setTitle("确定删除这条动态吗？")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    new DeleteMomentRequest(deleteMomentCallback, timelineModel.id, jwt);
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .show();
+//                    new DeleteMomentRequest(deleteMomentCallback, timelineModel.id, jwt);
+                }
+            });
         }
         else {
+            delete_btn.setVisibility(View.GONE);
+
             follow_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

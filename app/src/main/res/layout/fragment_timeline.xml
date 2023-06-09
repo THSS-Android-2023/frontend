@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    -->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    android:background="#dddddd">-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
@@ -57,6 +56,7 @@
                 android:layout_height="wrap_content"
                 />
         </LinearLayout>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
@@ -66,5 +66,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    </LinearLayout>
-<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+</LinearLayout>
+    <TextView
+    android:id="@+id/empty_hint"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:textSize="17dp"
+    android:clickable="false"
+    android:focusable="false"
+    android:text="动态列表空空如也~"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
