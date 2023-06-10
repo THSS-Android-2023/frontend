@@ -270,14 +270,15 @@ public class TimelineFragment extends Fragment {
 
     private void pullMoment(){
 
-        recyclerView.setVisibility(View.GONE);
+
         emptyHint.setVisibility(View.GONE);
-        loadingAnimationView.setVisibility(View.VISIBLE);
-        loadingAnimationView.playAnimation();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (data.isEmpty()) {
+                    recyclerView.setVisibility(View.GONE);
+                    loadingAnimationView.setVisibility(View.VISIBLE);
+                    loadingAnimationView.playAnimation();
                     if (pageAttr == FOLLOWINGS_PAGE) {
                         new GetMomentRequest(refreshMomentCallback, pageAttr, filterItem, jwt, -1);
                     } else if (pageAttr == TAGGED_PAGE)
