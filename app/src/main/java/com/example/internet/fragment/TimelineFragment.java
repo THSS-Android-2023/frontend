@@ -59,6 +59,8 @@ public class TimelineFragment extends Fragment {
     public final static int STARRED_PAGE = 104;
     public final static int TAGGED_PAGE = 105;
 
+    Boolean isLoading = false;
+
     @BindView(R.id.recyclerview)
     RecyclerView recyclerView;
 
@@ -100,11 +102,13 @@ public class TimelineFragment extends Fragment {
     Callback refreshMomentCallback = new Callback() {
         @Override
         public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            isLoading = false;
         }
 
         @Override
         public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-
+//            if (isLoading) return;
+            isLoading = false;
             int code = response.code();
             Log.d("code", String.valueOf(code));
             if (code != 200 && code != 201) {
@@ -273,6 +277,8 @@ public class TimelineFragment extends Fragment {
 
     private void pullMoment(){
 
+        if(isLoading) return;
+        isLoading = true;
 
         emptyHint.setVisibility(View.GONE);
         new Handler().postDelayed(new Runnable() {
@@ -280,8 +286,8 @@ public class TimelineFragment extends Fragment {
             public void run() {
                 if (data.isEmpty()) {
                     recyclerView.setVisibility(View.GONE);
-//                    loadingAnimationView.setVisibility(View.VISIBLE);
-//                    loadingAnimationView.playAnimation();
+                    loadingAnimationView.setVisibility(View.VISIBLE);
+                    loadingAnimationView.playAnimation();
                     if (pageAttr == FOLLOWINGS_PAGE) {
                         new GetMomentRequest(refreshMomentCallback, pageAttr, filterItem, jwt, -1);
                     } else if (pageAttr == TAGGED_PAGE)
@@ -299,7 +305,7 @@ public class TimelineFragment extends Fragment {
                         new GetMomentRequest(refreshMomentCallback, pageAttr, jwt, lastId);
                 }
             }
-        }, 500);
+        }, 1000);
 
 
 

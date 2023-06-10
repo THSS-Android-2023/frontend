@@ -490,7 +490,7 @@ public class DetailsActivity extends BaseActivity{
         timelineModel = gson.fromJson(jsonString, TimelineModel.class);
         momentId = timelineModel.id;
 
-        usernameView.setText(timelineModel.username);
+        usernameView.setText(timelineModel.nickname);
 //        avatarView.setImageResource(timelineModel.avatar);
         runOnUiThread(new Runnable() {
             @Override
@@ -560,10 +560,11 @@ public class DetailsActivity extends BaseActivity{
         adapter = new CommentListAdapter(commentData, this);
         adapter.setOnItemClickListener((adapter, view, position) -> {
             Log.d("123", "Clicked on " + position);
-            Intent newIntent = new Intent(this, DetailsActivity.class);
+            Intent newIntent = new Intent(this, UserInfoActivity.class);
             newIntent.putExtra("curUsername", username);
             newIntent.putExtra("jwt", jwt);
             newIntent.putExtra("username", commentData.get(position).username);
+            startActivity(newIntent);
             overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
         });
         adapter.setManager(recyclerView);

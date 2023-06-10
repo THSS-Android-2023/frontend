@@ -13,7 +13,7 @@ public class GetSearchResultRequest extends BaseRequest{
     public GetSearchResultRequest(Callback saveCallback, String keyWords, String jwt){
         super();
         try{
-            searchUrl += keyWords + "/0" + "/";
+            searchUrl += keyWords + "/";
             get(searchUrl, saveCallback, jwt);
         }
         catch (Exception e){
