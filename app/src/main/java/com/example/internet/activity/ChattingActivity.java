@@ -266,7 +266,12 @@ public class ChattingActivity extends AppCompatActivity implements MessagesListA
                     for (int i = 0; i < jsonArray.length(); i++) {
                         String sender = jsonArray.getJSONObject(i).getString("sender");
                         String content = jsonArray.getJSONObject(i).getString("content");
-                        MessageModel m = new MessageModel("0", new ChatUserModel(sender, null, false), content);
+                        String time = jsonArray.getJSONObject(i).getString("time");
+                        String avatar = jsonArray.getJSONObject(i).getString("avatar");
+                        String format = "yyyy-MM-dd HH:mm";
+                        DateFormat dateFormat = new SimpleDateFormat(format);
+                        Date date = dateFormat.parse(time);
+                        MessageModel m = new MessageModel("0", new ChatUserModel(sender, avatar, false), content, date);
                         messageIdList.addFirst(jsonArray.getJSONObject(i).getInt("id"));
                         messagesListAdapter.addToStart(m, true);
                     }
