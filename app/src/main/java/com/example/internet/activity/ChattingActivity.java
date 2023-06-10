@@ -85,6 +85,8 @@ public class ChattingActivity extends AppCompatActivity implements MessagesListA
         username = getIntent().getStringExtra("username");
         target = getIntent().getStringExtra("target");
 
+
+
         messagesListAdapter = new MessagesListAdapter<>(username, (imageView, url, payload) -> Picasso.get().load(url).into(imageView));
         //滑倒顶部时加载历史记录
         messagesListAdapter.setLoadMoreListener(this);
@@ -226,13 +228,14 @@ public class ChattingActivity extends AppCompatActivity implements MessagesListA
         public void run() {
             // 执行轮询操作的代码
             while (!Thread.interrupted()) {
-                if (messageIdList.size() > 0){
-                    new GetMessageRequest( getMessageCallback
-                    , target, jwt, messageIdList.get(0), "new");
-                }
-                else if (hasInit){
-                    new GetMessageRequest( getMessageCallback
-                            , target, jwt);
+                if (hasInit) {
+                    if (messageIdList.size() > 0) {
+                        new GetMessageRequest(getMessageCallback
+                                , target, jwt, messageIdList.get(0), "new");
+                    } else {
+                        new GetMessageRequest(getMessageCallback
+                                , target, jwt);
+                    }
                 }
                 try {
                     Thread.sleep(1000); // 每隔 1 秒执行一次轮询操作
