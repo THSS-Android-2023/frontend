@@ -58,10 +58,11 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:text="【THU春日足迹】"
         android:textSize="50px"
         android:textStyle="bold"
@@ -69,10 +70,11 @@
         app:layout_constraintTop_toBottomOf="@id/timestamp" />
     <TextView
         android:id="@+id/content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:text="尼康35px，来讨份明信片~"
         android:textSize="40px"
         app:layout_constraintLeft_toLeftOf="parent"
