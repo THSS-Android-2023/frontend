@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Global {
-    public static final String API_URL = "http://10.0.2.2:5001";
-//    public static final String API_URL = "http://129.211.216.10:5001";
+//    public static final String API_URL = "http://10.0.2.2:5001";
+    public static final String API_URL = "http://129.211.216.10:5001";
 //    public static final String API_URL = "http://183.173.147.116:5000";
     public static final String EMPTY_AVATAR_URL = API_URL + "/static/default.png";
 
     public static final String VIDEO_TEST_URL = "https://media.geeksforgeeks.org/wp-content/uploads/20201217192146/Screenrecorder-2020-12-17-19-17-36-828.mp4?_=1";
-    public static final int POLLING_INTERVAL = 300;
+    public static final int POLLING_INTERVAL = 3;
 
     public static final HashMap<String, String> TAG_CODE2STR_MAP;
 

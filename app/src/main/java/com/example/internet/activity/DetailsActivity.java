@@ -535,8 +535,12 @@ public class DetailsActivity extends BaseActivity{
         });
 
         if (timelineModel.mp4Url.isEmpty()) {
+            if (timelineModel.imgUrls.isEmpty()) {
+                nine_grid.setVisibility(View.GONE);
+            } else {
+                nine_grid.setVisibility(View.VISIBLE);
+            }
             nine_grid.setImagesData(timelineModel.imgUrls);
-            nine_grid.setVisibility(View.VISIBLE);
             playerView.setVisibility(View.GONE);
         } else {
             MediaSource mediaSource = buildMediaSource(Uri.parse(timelineModel.mp4Url));

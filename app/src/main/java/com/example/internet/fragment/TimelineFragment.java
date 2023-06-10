@@ -142,9 +142,9 @@ public class TimelineFragment extends Fragment {
                             emptyHint.setVisibility(View.VISIBLE);
                         else
                             emptyHint.setVisibility(View.GONE);
-//                        loadingAnimationView.cancelAnimation();
-//                        loadingAnimationView.setVisibility(View.GONE);
-//                        recyclerView.setVisibility(View.VISIBLE);
+                        loadingAnimationView.cancelAnimation();
+                        loadingAnimationView.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
                         swipeRefreshLayout.setRefreshing(false);
                         adapter.notifyDataSetChanged();
                     }
