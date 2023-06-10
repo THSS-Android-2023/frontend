@@ -321,6 +321,7 @@ public class TimelineFragment extends Fragment {
                 this.data.set(index, timelineModel);
                 adapter.notifyDataSetChanged();
         }
+
     }
 
 
