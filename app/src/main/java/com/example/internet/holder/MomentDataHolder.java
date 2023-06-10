@@ -104,6 +104,8 @@ public class MomentDataHolder extends BaseViewHolder {
         nineGridImageView.setImagesData(imageList);
         nineGridImageView.setVisibility(View.VISIBLE);
         playerView.setVisibility(View.GONE);
+        if (imageList.isEmpty())
+            nineGridImageView.setVisibility(View.GONE);
         bindContent(content);
 //        Toast.makeText(ctx, markdown, Toast.LENGTH_LONG).show();
     }

@@ -11,7 +11,7 @@ public class NotificationModel {
     public String img = "";
     public int type;
 
-    public Boolean hasNoticed;
+    public int hasNoticed;
 
 //    public NotificationModel(String username, String content, String timestamp, int avatar, int img){
 //        this.username = username;
@@ -27,7 +27,7 @@ public class NotificationModel {
 //            this.timestamp = jsonObject.getString("timestamp");
 
             this.type = Integer.valueOf(jsonObject.getString("_type"));
-            this.hasNoticed = jsonObject.getBoolean("has_noticed");
+            this.hasNoticed = jsonObject.getInt("has_noticed");
             String str = jsonObject.getString("content");
             if (type == 0){
                 if (str.length() > 10)

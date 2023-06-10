@@ -207,11 +207,21 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
         RadioGroup radioGroup = new RadioGroup(this);
         radioGroup.setOrientation(RadioGroup.VERTICAL);
 
+        RadioGroup.LayoutParams option1LayoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
+        option1LayoutParams.topMargin = 30;
+        option1LayoutParams.leftMargin = 60;
+
         RadioButton option1 = new RadioButton(this);
         option1.setText("图片");
+        option1.setLayoutParams(option1LayoutParams);
+
+        RadioGroup.LayoutParams option2LayoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
+        option2LayoutParams.topMargin = 20;
+        option2LayoutParams.leftMargin = 60;
 
         RadioButton option2 = new RadioButton(this);
         option2.setText("视频");
+        option2.setLayoutParams(option2LayoutParams);
 
         radioGroup.addView(option1);
         radioGroup.addView(option2);
@@ -505,8 +515,8 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
 //        data.putExtra("img", mSharedImg);
 //        setResult(RESULT_OK, data);
         List<File> imageFiles = new ArrayList<>();
-        Log.d("test", "111111");
-        Log.d("uri_0", uriList.get(0));
+//        Log.d("test", "111111");
+//        Log.d("uri_0", uriList.get(0));
         for (String uri : uriList) {
             Uri imageUri = Uri.parse(uri);
             Log.d("uri", imageUri.toString());
@@ -573,8 +583,7 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
                 mSharedVid = "";
                 mSharedTitle = "";
                 putPreference();
-                AppCompatActivity appCtx = (AppCompatActivity) ctx;
-                appCtx.finish();
+                finish();
                 overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             } catch (Exception e) {
                 e.printStackTrace();
