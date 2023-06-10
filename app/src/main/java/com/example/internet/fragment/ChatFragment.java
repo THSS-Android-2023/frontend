@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -36,12 +37,16 @@ public class ChatFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    TextView emptyView;
+
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
         ButterKnife.bind(this, rootView);
+        emptyView = rootView.findViewById(R.id.empty_hint);
+        emptyView.setVisibility(View.GONE);
         ctx = (MainActivity) getActivity();
         dialogsList = rootView.findViewById(R.id.dialogList);
 
@@ -106,8 +111,15 @@ public class ChatFragment extends Fragment {
                                         int unreadCount = 0; // TODO:
                                         dialogsListAdapter.addItem(new DialogModel(username, avatar, lastMessage, unreadCount));
                                     }
+
                                 } catch (Exception e) {
                                     e.printStackTrace();
+                                } finally {
+                                    if (dialogsListAdapter.isEmpty())
+                                        emptyView.setVisibility(View.VISIBLE);
+                                    else
+                                        emptyView.setVisibility(View.GONE);
+
                                 }
                                 ;
                             });

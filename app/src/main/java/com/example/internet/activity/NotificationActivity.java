@@ -3,6 +3,7 @@ package com.example.internet.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,8 +38,21 @@ public class NotificationActivity extends BaseActivity {
 
     @BindView(R.id.recyclerview)
     RecyclerView recyclerView;
+
+    @BindView(R.id.noticed_recyclerview)
+    RecyclerView notifiedRecyclerView;
+
+    @BindView(R.id.seperator1)
+    TextView seperator1;
+
+    @BindView(R.id.seperator2)
+    TextView seperator2;
+
     private List<NotificationModel> data;
     private NotificationListAdapter adapter;
+
+    private List<NotificationModel> notifiedData;
+    private NotificationListAdapter notifiedAdapter;
 
     Callback getNotificationCallback = new Callback() {
         @Override
@@ -60,9 +74,23 @@ public class NotificationActivity extends BaseActivity {
                 JSONArray jsonArray = new JSONArray(res);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
-                    data.add(new NotificationModel(object));
+                    NotificationModel notificationModel = new NotificationModel(object);
+                    if (notificationModel.hasNoticed) {
+                        notifiedData.add(notificationModel);
+                    } else {
+                        data.add(notificationModel);
+                    }
                 }
-                runOnUiThread(() -> adapter.notifyDataSetChanged());
+                runOnUiThread(() -> {
+                    if (data.size() == 0) {
+                        seperator1.setText("暂无新通知");
+                    }
+                    if (notifiedData.size() == 0) {
+                        seperator2.setText("暂无历史通知");
+                    }
+                    adapter.notifyDataSetChanged();
+                    notifiedAdapter.notifyDataSetChanged();
+                });
             }
              catch (Exception e) {
                 e.printStackTrace();
@@ -119,12 +147,10 @@ public class NotificationActivity extends BaseActivity {
         jwt = getIntent().getStringExtra("jwt");
         username = getIntent().getStringExtra("username");
         data = new ArrayList<>();
+        notifiedData = new ArrayList<>();
 
-//        data.add(new NotificationModel("pc20", "评论了：“123”", "10:31", R.drawable.avatar4,R.drawable.pyq_41));
-//        data.add(new NotificationModel("xuhb20", "赞了你的动态", "昨天 21:43", R.drawable.avatar1,R.drawable.pyq_31));
         adapter = new NotificationListAdapter(data, this);
         adapter.setOnItemClickListener((adapter, view, position) -> {
-            Log.d("123", "Clicked on " + position);
             NotificationModel model = data.get(position);
             if (model.type != 0){
                 new GetMomentRequest(getDetailsCallback, jwt, model.id);
@@ -140,6 +166,24 @@ public class NotificationActivity extends BaseActivity {
         });
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);
+
+        notifiedAdapter = new NotificationListAdapter(notifiedData, this);
+        notifiedAdapter.setOnItemClickListener((adapter, view, position) -> {
+            NotificationModel model = notifiedData.get(position);
+            if (model.type != 0){
+                new GetMomentRequest(getDetailsCallback, jwt, model.id);
+            }
+            else{
+                Intent intent = new Intent(NotificationActivity.this, ChattingActivity.class);
+                intent.putExtra("jwt", jwt);
+                intent.putExtra("username", username);
+                intent.putExtra("target", model.username);
+                startActivity(intent);
+                overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+            }
+        });
+        notifiedAdapter.setManager(notifiedRecyclerView);
+        notifiedRecyclerView.setAdapter(notifiedAdapter);
 
         new GetNoticeRequest(getNotificationCallback, jwt);
     }
