@@ -519,14 +519,14 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
 //        Log.d("uri_0", uriList.get(0));
         for (String uri : uriList) {
             Uri imageUri = Uri.parse(uri);
-            Log.d("uri", imageUri.toString());
+//            Log.d("uri", imageUri.toString());
             String path = FileUtils.getPath(this, imageUri);
-            Log.d("path", path);
+//            Log.d("path", path);
             File imageFile = new File(path);
             imageFiles.add(imageFile);
         }
         File[] imageFileArray = imageFiles.toArray(new File[0]);
-        Log.d("length", imageFileArray.length + "");
+//        Log.d("length", imageFileArray.length + "");
 
         new PublishMomentRequest(mSharedTitle, mSharedText, Global.TAG_STR2CODE_MAP.get(mSharedTag), mSharedLoc,
                 uriList.size(), imageFileArray, publishCallback, jwt);

@@ -43,6 +43,8 @@ public class LoginActivity extends BaseActivity {
     String pwd = "";
     String jwt = "";
 
+    String nickname = "";
+
     Boolean withoutAnim = false;
 
     Callback loginCallback = new Callback() {
@@ -59,6 +61,7 @@ public class LoginActivity extends BaseActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(resStr);
                     jwt = jsonObject.getString("jwt");
+                    nickname = jsonObject.getString("nickname");
                 } catch(Exception e){
                     e.printStackTrace();
                 }
@@ -67,11 +70,13 @@ public class LoginActivity extends BaseActivity {
                 editor.putBoolean("login", true);
                 editor.putString("username", usr);
                 editor.putString("password", pwd);
+                editor.putString("nickname", nickname);
                 editor.putString("jwt", jwt);
                 editor.apply();
                 Intent intent = new Intent(context, MainActivity.class);
                 intent.putExtra("username", usr);
                 intent.putExtra("jwt", jwt);
+                intent.putExtra("nickname", nickname);
 
                 Intent serviceIntent = new Intent(context, NotificationService.class);
                 serviceIntent.putExtra("jwt", jwt);

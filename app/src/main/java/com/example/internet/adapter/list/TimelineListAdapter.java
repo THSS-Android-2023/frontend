@@ -26,7 +26,7 @@ public class TimelineListAdapter extends BaseListAdapter<TimelineModel>{
 
     @Override
     protected void convert(BaseViewHolder holder, TimelineModel item){
-        holder.setText(R.id.username, item.username)
+        holder.setText(R.id.username, item.nickname)
                 .setText(R.id.timestamp, item.timestamp)
                 .setText(R.id.title, item.title)
                 .setText(R.id.content, item.content)

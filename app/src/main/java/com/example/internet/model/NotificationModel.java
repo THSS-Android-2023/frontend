@@ -5,6 +5,7 @@ import org.json.JSONObject;
 public class NotificationModel {
     public String avatar = "";
     public String username = "";
+    public String nickname = "";
     public String content = "";
     public String timestamp = "";
     public int id;

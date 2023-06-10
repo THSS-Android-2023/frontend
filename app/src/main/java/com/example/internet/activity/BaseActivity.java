@@ -1,5 +1,6 @@
 package com.example.internet.activity;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,4 +30,5 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
     }
+
 }

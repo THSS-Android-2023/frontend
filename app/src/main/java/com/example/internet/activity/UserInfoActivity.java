@@ -87,6 +87,8 @@ public class UserInfoActivity extends BaseActivity {
 
     String jwt;
 
+    String nickname;
+
     Callback followUserCallback = new Callback() {
         @Override
         public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -201,6 +203,7 @@ public class UserInfoActivity extends BaseActivity {
                 followings_num = jsonObject.getInt("followings_num");
                 isFollow = jsonObject.getBoolean("is_following");
                 isBlacklist = jsonObject.getBoolean("is_blacked");
+                nickname = jsonObject.getString("nickname");
                 Log.d("followings_num", ""+followings_num);
 //                Log.d("infoFragmentAvatar", avatar_url);
                 if (avatar_url.isEmpty())
@@ -212,6 +215,7 @@ public class UserInfoActivity extends BaseActivity {
                         Picasso.get().load(avatar_url).into(img_avatar);
                         followers_num_text.setText("" + followers_num);
                         followings_num_text.setText("" + followings_num);
+                        username_textview.setText(nickname);
                         changeBtnState();
                     }
                 });
@@ -301,9 +305,12 @@ public class UserInfoActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
+        // 当前主页
         username = intent.getStringExtra("username");
+        nickname = intent.getStringExtra("nickname");
+        // 当前app使用者
         curUsername = intent.getStringExtra("curUsername");
-        username_textview.setText(curUsername);
+        username_textview.setText(nickname);
         jwt = intent.getStringExtra("jwt");
 
         if(username.equals(curUsername)){

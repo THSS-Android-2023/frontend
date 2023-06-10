@@ -211,6 +211,7 @@ public class InfoFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(ctx, FollowingActivity.class);
                 intent.putExtra("jwt", ctx.jwt);
+                intent.putExtra("username", username);
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }

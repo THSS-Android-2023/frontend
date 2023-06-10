@@ -16,7 +16,7 @@ public class NotificationListAdapter extends BaseListAdapter<NotificationModel>{
     }
     @Override
     protected void convert(BaseViewHolder holder, NotificationModel item){
-        holder.setText(R.id.username, item.username)
+        holder.setText(R.id.username, item.nickname)
                 .setText(R.id.content, item.content)
                 .setText(R.id.timestamp, item.timestamp);
 

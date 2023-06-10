@@ -17,7 +17,7 @@ public class CommentListAdapter extends BaseListAdapter<CommentModel>{
     }
     @Override
     protected void convert(BaseViewHolder holder, CommentModel item){
-        holder.setText(R.id.username, item.username)
+        holder.setText(R.id.username, item.nickname)
                 .setText(R.id.content, item.content)
                 .setText(R.id.timestamp, item.timestamp);
         ImageView avatarIv = holder.getView(R.id.avatar);

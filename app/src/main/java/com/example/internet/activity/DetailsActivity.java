@@ -502,7 +502,6 @@ public class DetailsActivity extends BaseActivity{
         });
         timestampView.setText(timelineModel.timestamp);
 
-
         titleView.setText(timelineModel.title);
         contentView.setText(timelineModel.content);
         if (!timelineModel.location.isEmpty())
@@ -613,10 +612,11 @@ public class DetailsActivity extends BaseActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DetailsActivity.this, UserInfoActivity.class);
-                intent.putExtra("username", username);
-                intent.putExtra("curUsername", timelineModel.username);
+                intent.putExtra("username", timelineModel.username);
+                intent.putExtra("curUsername", username);
+                intent.putExtra("nickname", timelineModel.nickname);
                 intent.putExtra("jwt", jwt);
-                startActivity(intent);
+                startActivityForResult(intent, 101);
                 overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }
         });
@@ -672,6 +672,15 @@ public class DetailsActivity extends BaseActivity{
             new CheckFollowshipRequest(checkFollowshipCallback, timelineModel.username, jwt);
         }
         new GetCommentRequest(getCommentCallback, timelineModel.id, jwt);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101 && resultCode == Activity.RESULT_OK) {
+            new CheckFollowshipRequest(checkFollowshipCallback, timelineModel.username, jwt);
+            changeBtnState(timelineModel.isFollow);
+        }
     }
 
     @Override
