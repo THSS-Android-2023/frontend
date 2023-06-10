@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -89,7 +90,7 @@ public class TimelineFragment extends Fragment {
         return fragment;
     }
 
-    Context ctx = getContext();
+    Context ctx;
     private List<TimelineModel> data;
     private TimelineListAdapter adapter;
     private String jwt;
@@ -135,15 +136,17 @@ public class TimelineFragment extends Fragment {
             } catch(Exception e){
                 e.printStackTrace();
             } finally {
-                getActivity().runOnUiThread(new Runnable() {
+                ((AppCompatActivity)ctx).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (data.isEmpty())
                             emptyHint.setVisibility(View.VISIBLE);
                         else
                             emptyHint.setVisibility(View.GONE);
-                        loadingAnimationView.cancelAnimation();
-                        loadingAnimationView.setVisibility(View.GONE);
+                        if (loadingAnimationView.getVisibility() == View.VISIBLE) {
+                            loadingAnimationView.cancelAnimation();
+                            loadingAnimationView.setVisibility(View.GONE);
+                        }
                         recyclerView.setVisibility(View.VISIBLE);
                         swipeRefreshLayout.setRefreshing(false);
                         adapter.notifyDataSetChanged();
@@ -277,8 +280,8 @@ public class TimelineFragment extends Fragment {
             public void run() {
                 if (data.isEmpty()) {
                     recyclerView.setVisibility(View.GONE);
-                    loadingAnimationView.setVisibility(View.VISIBLE);
-                    loadingAnimationView.playAnimation();
+//                    loadingAnimationView.setVisibility(View.VISIBLE);
+//                    loadingAnimationView.playAnimation();
                     if (pageAttr == FOLLOWINGS_PAGE) {
                         new GetMomentRequest(refreshMomentCallback, pageAttr, filterItem, jwt, -1);
                     } else if (pageAttr == TAGGED_PAGE)
