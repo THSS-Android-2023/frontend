@@ -1,6 +1,7 @@
 package com.example.internet.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,6 +52,14 @@ public class RegisterActivity extends BaseActivity {
             editor.putString("username", usr);
             editor.putString("password", pwd);
             editor.apply();
+
+            Intent intent = new Intent();
+            intent.putExtra("username", usr);
+            intent.putExtra("password", pwd);
+            setResult(RESULT_OK, intent);
+
+            finish();
+
             finish();
             overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
         }

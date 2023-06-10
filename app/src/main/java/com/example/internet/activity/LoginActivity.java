@@ -39,6 +39,8 @@ public class LoginActivity extends BaseActivity {
     EditText password_edit;
 
     final Context context = this;
+
+    final int REGISTER_REQUEST_CODE = 404;
     String usr = "";
     String pwd = "";
     String jwt = "";
@@ -48,18 +50,20 @@ public class LoginActivity extends BaseActivity {
     Callback loginCallback = new Callback() {
         @Override
         public void onFailure(@NotNull Call call, @NotNull IOException e) {
-            Log.d("Error", e.toString());}
+            Log.d("Error", e.toString());
+        }
+
         @Override
         public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
             int statusCode = response.code();
-            if (statusCode == 401){
+            if (statusCode == 401) {
                 ErrorDialog error = new ErrorDialog(context, "账号/密码不正确");
             } else if (statusCode == 200) {
                 String resStr = Objects.requireNonNull(response.body()).string();
                 try {
                     JSONObject jsonObject = new JSONObject(resStr);
                     jwt = jsonObject.getString("jwt");
-                } catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
@@ -95,7 +99,7 @@ public class LoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         boolean hasLogin = sharedPreferences.getBoolean("login", false);
-        if (hasLogin){
+        if (hasLogin) {
             withoutAnim = true;
             usr = sharedPreferences.getString("username", "");
             pwd = sharedPreferences.getString("password", "");
@@ -103,16 +107,32 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    public void onRegisterClick(View v){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REGISTER_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                String username = data.getStringExtra("username");
+                String password = data.getStringExtra("password");
+                username_edit.setText(username);
+                password_edit.setText(password);
+            } else if (resultCode == RESULT_CANCELED) {
+
+            }
+        }
+    }
+
+    public void onRegisterClick(View v) {
         Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REGISTER_REQUEST_CODE);
         overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
     }
 
-    public void onLoginClick(View v){
+    public void onLoginClick(View v) {
         usr = username_edit.getText().toString();
         pwd = password_edit.getText().toString();
-        if(usr.isEmpty()||pwd.isEmpty()){
+        if (usr.isEmpty() || pwd.isEmpty()) {
             return;
         }
         LoginRequest request = new LoginRequest(usr, pwd, loginCallback);
@@ -122,8 +142,8 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-            if((System.currentTimeMillis()-exitTime) > 2000){
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
                 Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
