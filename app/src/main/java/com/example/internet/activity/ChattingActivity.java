@@ -45,6 +45,8 @@ public class ChattingActivity extends AppCompatActivity implements MessagesListA
 
     private String target;
 
+    private Boolean hasInit = false;
+
     ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
     ReentrantReadWriteLock.ReadLock readLock = lock.readLock();
@@ -125,6 +127,7 @@ public class ChattingActivity extends AppCompatActivity implements MessagesListA
                         e.printStackTrace();
                     } finally {
                         writeLock.unlock();
+                        hasInit = true;
                     }
                 });
             }
@@ -227,7 +230,7 @@ public class ChattingActivity extends AppCompatActivity implements MessagesListA
                     new GetMessageRequest( getMessageCallback
                     , target, jwt, messageIdList.get(0), "new");
                 }
-                else {
+                else if (hasInit){
                     new GetMessageRequest( getMessageCallback
                             , target, jwt);
                 }
