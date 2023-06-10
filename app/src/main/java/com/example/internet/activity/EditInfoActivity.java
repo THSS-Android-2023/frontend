@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.internet.R;
 import com.example.internet.request.ChangeInfoRequest;
@@ -49,6 +50,7 @@ public class EditInfoActivity extends BaseActivity {
 
     final Context ctx = this;
     private String username;
+    private String nickname;
 
     private String avatar_url;
 
@@ -59,7 +61,10 @@ public class EditInfoActivity extends BaseActivity {
     ImageView avatar_image;
 
     @BindView(R.id.username_edit)
-    EditText username_edit;
+    TextView username_edit;
+
+    @BindView(R.id.nickname_edit)
+    EditText nickname_edit;
 
     @BindView(R.id.intro_edit)
     EditText intro_edit;
@@ -123,6 +128,7 @@ public class EditInfoActivity extends BaseActivity {
 
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
+        nickname = intent.getStringExtra("nickname");
         introduction = intent.getStringExtra("intro");
         avatar_url = intent.getStringExtra("avatar");
         jwt = intent.getStringExtra("jwt");
@@ -148,6 +154,7 @@ public class EditInfoActivity extends BaseActivity {
 
         Picasso.get().load(avatar_url).into(avatar_image);
         username_edit.setText(username);
+        nickname_edit.setText(nickname);
         intro_edit.setText(introduction);
     }
 
@@ -193,13 +200,14 @@ public class EditInfoActivity extends BaseActivity {
     public void onSaveClick(View v){
         String usr = username_edit.getText().toString();
         String intro = intro_edit.getText().toString();
+        String nickname = nickname_edit.getText().toString();
 
         if(usr.isEmpty()){
             new ErrorDialog(this, "用户名不能为空");
             return;
         }
 
-        new ChangeInfoRequest(intro, changeResultCallback, jwt);
+        new ChangeInfoRequest(intro, nickname, changeResultCallback, jwt);
     }
 
     public void onResetPasswordClick(View view) {
