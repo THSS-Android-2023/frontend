@@ -1,5 +1,6 @@
 package com.example.internet.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.example.internet.adapter.list.FollowingListAdapter;
 import com.example.internet.model.FollowingModel;
 import com.example.internet.request.GetFollowingRequest;
 import com.example.internet.util.ErrorDialog;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,6 +41,7 @@ public class FollowingActivity extends BaseActivity {
     private FollowingListAdapter adapter;
 
     String jwt;
+    String username;
 
     Callback getFollowingCallback = new Callback() {
         @Override
@@ -50,7 +53,6 @@ public class FollowingActivity extends BaseActivity {
         @Override
         public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
             String res = response.body().string();
-            Log.d("123", "onResponse: " + res);
             try {
                 JSONArray followingList = new JSONArray(res);
                 data.clear();
@@ -73,15 +75,23 @@ public class FollowingActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         jwt = getIntent().getStringExtra("jwt");
+        username = getIntent().getStringExtra("username");
         data = new ArrayList<>();
 
-//        data.add(new FollowingModel("pc20", "我叫pc，很吊的pc", R.drawable.avatar4));
-//        data.add(new FollowingModel("xuhb20", "我好菜qwq", R.drawable.avatar1));
         adapter = new FollowingListAdapter(data, this, jwt);
         adapter.setOnItemClickListener((adapter, view, position) -> {
             Log.d("123", "Clicked on " + position);
         });
         adapter.setManager(recyclerView);
+        adapter.setOnItemClickListener((adapter, view, position) -> {
+            Gson gson = new Gson();
+            String jsonString = gson.toJson(data.get(position));
+            Intent intent = new Intent(this, DetailsActivity.class);
+            intent.putExtra("curUsername", data.get(position).username);
+            intent.putExtra("jwt", jwt);
+            intent.putExtra("username", username);
+            overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+        });
         recyclerView.setAdapter(adapter);
 
         new GetFollowingRequest(getFollowingCallback, jwt);

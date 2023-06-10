@@ -75,18 +75,24 @@ public class NotificationActivity extends BaseActivity {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
                     NotificationModel notificationModel = new NotificationModel(object);
-                    if (notificationModel.hasNoticed) {
+                    if (notificationModel.hasNoticed == 1) {
                         notifiedData.add(notificationModel);
                     } else {
                         data.add(notificationModel);
                     }
                 }
                 runOnUiThread(() -> {
-                    if (data.size() == 0) {
+                    if (data.isEmpty()) {
                         seperator1.setText("暂无新通知");
                     }
-                    if (notifiedData.size() == 0) {
+                    else {
+                        seperator1.setText("新通知");
+                    }
+                    if (notifiedData.isEmpty()) {
                         seperator2.setText("暂无历史通知");
+                    }
+                    else {
+                        seperator2.setText("历史通知");
                     }
                     adapter.notifyDataSetChanged();
                     notifiedAdapter.notifyDataSetChanged();

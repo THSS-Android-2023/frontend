@@ -43,7 +43,7 @@ public class FollowingListAdapter extends BaseListAdapter<FollowingModel>{
     }
     @Override
     protected void convert(BaseViewHolder holder, FollowingModel item){
-        holder.setText(R.id.username, item.username)
+        holder.setText(R.id.username, item.nickname)
                 .setText(R.id.intro, item.intro);
 
 

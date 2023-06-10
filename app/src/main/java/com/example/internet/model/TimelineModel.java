@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TimelineModel {
+
+    public String nickname = "";
     public String title = "";
     public String content = "";
     public String username = "";
@@ -39,6 +41,7 @@ public class TimelineModel {
         try {
 //            Log.d("TimelineModel", jsonObject.toString());
             username = jsonObject.getString("username");
+            nickname = jsonObject.getString("nickname");
             id = jsonObject.getInt("id");
             tag = jsonObject.getString("tag");
             title = jsonObject.getString("title");

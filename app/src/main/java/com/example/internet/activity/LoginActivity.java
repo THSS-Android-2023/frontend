@@ -45,6 +45,8 @@ public class LoginActivity extends BaseActivity {
     String pwd = "";
     String jwt = "";
 
+    String nickname = "";
+
     Boolean withoutAnim = false;
 
     Callback loginCallback = new Callback() {
@@ -63,7 +65,12 @@ public class LoginActivity extends BaseActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(resStr);
                     jwt = jsonObject.getString("jwt");
+<<<<<<< HEAD
                 } catch (Exception e) {
+=======
+                    nickname = jsonObject.getString("nickname");
+                } catch(Exception e){
+>>>>>>> a7da587942aa0541c3b8a7b336bbbdb6127e758c
                     e.printStackTrace();
                 }
                 SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
@@ -71,11 +78,13 @@ public class LoginActivity extends BaseActivity {
                 editor.putBoolean("login", true);
                 editor.putString("username", usr);
                 editor.putString("password", pwd);
+                editor.putString("nickname", nickname);
                 editor.putString("jwt", jwt);
                 editor.apply();
                 Intent intent = new Intent(context, MainActivity.class);
                 intent.putExtra("username", usr);
                 intent.putExtra("jwt", jwt);
+                intent.putExtra("nickname", nickname);
 
                 Intent serviceIntent = new Intent(context, NotificationService.class);
                 serviceIntent.putExtra("jwt", jwt);

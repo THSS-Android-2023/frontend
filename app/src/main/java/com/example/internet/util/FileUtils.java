@@ -89,6 +89,8 @@ public class FileUtils {
                 int column_index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(column_index);
             }
+        } catch (Exception e){
+            e.printStackTrace();
         } finally {
             if (cursor != null) {
                 cursor.close();

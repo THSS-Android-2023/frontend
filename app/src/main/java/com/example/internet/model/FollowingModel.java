@@ -7,6 +7,7 @@ public class FollowingModel {
     public String intro;
     public String avatar;
     public Boolean following;
+    public String nickname;
 
 //    public FollowingModel(String username, String intro, int avatar){
 //        this.username = username;
@@ -18,6 +19,7 @@ public class FollowingModel {
     public FollowingModel(JSONObject jsonObject){
         try {
             this.username = jsonObject.getString("username");
+            this.nickname = jsonObject.getString("nickname");
             this.intro = jsonObject.getString("intro");
             this.avatar = jsonObject.getString("avatar");
             this.following = jsonObject.getBoolean("is_current_user_following");
@@ -29,6 +31,7 @@ public class FollowingModel {
     public FollowingModel(JSONObject jsonObject, Boolean following){
         try {
             this.username = jsonObject.getString("username");
+            this.nickname = jsonObject.getString("nickname");
             this.intro = jsonObject.getString("intro");
             this.avatar = jsonObject.getString("avatar");
         } catch (Exception e) {

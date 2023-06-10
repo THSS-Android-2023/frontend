@@ -23,6 +23,7 @@ public class MainActivity extends BaseActivity {
 
     private String username;
     public String jwt;
+    public String nickname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class MainActivity extends BaseActivity {
 
         username = getIntent().getStringExtra("username");
         jwt = getIntent().getStringExtra("jwt");
+        nickname = getIntent().getStringExtra("nickname");
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNav);
 
