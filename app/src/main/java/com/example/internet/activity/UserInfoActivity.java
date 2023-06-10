@@ -366,8 +366,8 @@ public class UserInfoActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(UserInfoActivity.this, ChattingActivity.class);
                 intent.putExtra("jwt", jwt);
-                intent.putExtra("username", username);
-                intent.putExtra("target", curUsername);
+                intent.putExtra("username", curUsername);
+                intent.putExtra("target", username);
                 startActivity(intent);
                 overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }

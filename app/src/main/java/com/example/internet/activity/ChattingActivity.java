@@ -224,42 +224,12 @@ public class ChattingActivity extends AppCompatActivity implements MessagesListA
             // 执行轮询操作的代码
             while (!Thread.interrupted()) {
                 if (messageIdList.size() > 0){
-                            new GetMessageRequest(new Callback() {
-                                @Override
-                                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                                    new ErrorDialog(ChattingActivity.this, "获取信息失败");
-                                }
-
-                                @Override
-                                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                                    if (response.code() != 200) {
-                                        new ErrorDialog(ChattingActivity.this, "获取信息失败");
-                                        return;
-                                    }
-                                    String res = response.body().string();
-                                    runOnUiThread(() -> {
-                                        try {
-
-                                            writeLock.lock();
-                                            Boolean scrollOrNot = !messagesList.canScrollVertically(1);
-                                            JSONArray jsonArray = new JSONArray(res);
-                                            for (int i = 0; i < jsonArray.length(); i++) {
-                                                String sender = jsonArray.getJSONObject(i).getString("sender");
-                                                String content = jsonArray.getJSONObject(i).getString("content");
-                                                MessageModel m = new MessageModel("0", new ChatUserModel(sender, null, false), content);
-                                                messageIdList.addFirst(jsonArray.getJSONObject(i).getInt("id"));
-                                                messagesListAdapter.addToStart(m, true);
-                                            }
-                                            if (scrollOrNot)
-                                                messagesList.scrollToPosition(0); // TODO
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        } finally {
-                                            writeLock.unlock();
-                                        }
-                                    });
-                                }
-                            }, target, jwt, messageIdList.get(0), "new");
+                    new GetMessageRequest( getMessageCallback
+                    , target, jwt, messageIdList.get(0), "new");
+                }
+                else {
+                    new GetMessageRequest( getMessageCallback
+                            , target, jwt);
                 }
                 try {
                     Thread.sleep(1000); // 每隔 1 秒执行一次轮询操作
@@ -268,6 +238,43 @@ public class ChattingActivity extends AppCompatActivity implements MessagesListA
                     break;
                 }
             }
+        }
+    };
+
+    Callback getMessageCallback = new Callback() {
+        @Override
+        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            new ErrorDialog(ChattingActivity.this, "获取信息失败");
+        }
+
+        @Override
+        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            if (response.code() != 200) {
+                new ErrorDialog(ChattingActivity.this, "获取信息失败");
+                return;
+            }
+            String res = response.body().string();
+            runOnUiThread(() -> {
+                try {
+
+                    writeLock.lock();
+                    Boolean scrollOrNot = !messagesList.canScrollVertically(1);
+                    JSONArray jsonArray = new JSONArray(res);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        String sender = jsonArray.getJSONObject(i).getString("sender");
+                        String content = jsonArray.getJSONObject(i).getString("content");
+                        MessageModel m = new MessageModel("0", new ChatUserModel(sender, null, false), content);
+                        messageIdList.addFirst(jsonArray.getJSONObject(i).getInt("id"));
+                        messagesListAdapter.addToStart(m, true);
+                    }
+                    if (scrollOrNot)
+                        messagesList.scrollToPosition(0); // TODO
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    writeLock.unlock();
+                }
+            });
         }
     };
 

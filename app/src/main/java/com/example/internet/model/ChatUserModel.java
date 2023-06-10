@@ -2,9 +2,6 @@ package com.example.internet.model;
 
 import com.stfalcon.chatkit.commons.models.IUser;
 
-/*
- * Created by troy379 on 04.04.17.
- */
 public class ChatUserModel implements IUser {
 
     private String id;
