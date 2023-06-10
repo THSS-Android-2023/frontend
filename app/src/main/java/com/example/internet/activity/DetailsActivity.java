@@ -551,15 +551,16 @@ public class DetailsActivity extends BaseActivity{
         likeNum.setText("" + timelineModel.numLikes);
         starNum.setText("" + timelineModel.numStars);
 
-
-
-
-
         commentData = new ArrayList<>();
 
         adapter = new CommentListAdapter(commentData, this);
         adapter.setOnItemClickListener((adapter, view, position) -> {
             Log.d("123", "Clicked on " + position);
+            Intent newIntent = new Intent(this, DetailsActivity.class);
+            newIntent.putExtra("curUsername", username);
+            newIntent.putExtra("jwt", jwt);
+            newIntent.putExtra("username", commentData.get(position).username);
+            overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
         });
         adapter.setManager(recyclerView);
         recyclerView.setAdapter(adapter);

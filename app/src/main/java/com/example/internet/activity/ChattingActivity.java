@@ -259,7 +259,6 @@ public class ChattingActivity extends AppCompatActivity implements MessagesListA
             String res = response.body().string();
             runOnUiThread(() -> {
                 try {
-
                     writeLock.lock();
                     Boolean scrollOrNot = !messagesList.canScrollVertically(1);
                     JSONArray jsonArray = new JSONArray(res);

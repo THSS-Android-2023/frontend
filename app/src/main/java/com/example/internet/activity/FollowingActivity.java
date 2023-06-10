@@ -87,9 +87,9 @@ public class FollowingActivity extends BaseActivity {
             Gson gson = new Gson();
             String jsonString = gson.toJson(data.get(position));
             Intent intent = new Intent(this, DetailsActivity.class);
-            intent.putExtra("curUsername", data.get(position).username);
+            intent.putExtra("curUsername", username);
             intent.putExtra("jwt", jwt);
-            intent.putExtra("username", username);
+            intent.putExtra("username", data.get(position).username);
             overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
         });
         recyclerView.setAdapter(adapter);
