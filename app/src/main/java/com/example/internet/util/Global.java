@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Global {
-    public static final String API_URL = "http://10.0.2.2:5001";
-//    public static final String API_URL = "http://129.211.216.10:5001";
+//    public static final String API_URL = "http://10.0.2.2:5001";
+    public static final String API_URL = "http://129.211.216.10:5001";
 //    public static final String API_URL = "http://183.173.147.116:5000";
     public static final String EMPTY_AVATAR_URL = API_URL + "/static/default.png";
 
