@@ -54,6 +54,7 @@ import okhttp3.Response;
 
 public class InfoFragment extends Fragment {
     String username;
+    String nickname;
     String introduction;
     String avatar_url;
     int followers_num, followings_num;
@@ -112,6 +113,7 @@ public class InfoFragment extends Fragment {
                 Log.d("resStr", resStr);
                 JSONObject jsonObject = new JSONObject(resStr);
                 introduction = jsonObject.getString("intro");
+                nickname = jsonObject.getString("nickname");
                 intro_textview.setText(introduction);
                 avatar_url = jsonObject.getString("avatar");
                 followers_num = jsonObject.getInt("followers_num");
@@ -127,6 +129,7 @@ public class InfoFragment extends Fragment {
                         Picasso.get().load(avatar_url).into(img_avatar);
                         followers_num_text.setText("" + followers_num);
                         followings_num_text.setText("" + followings_num);
+                        username_textview.setText(nickname);
                     }
                 });
             }
@@ -217,6 +220,7 @@ public class InfoFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), EditInfoActivity.class);
                 intent.putExtra("username", username);
+                intent.putExtra("nickname", nickname);
                 intent.putExtra("intro", introduction);
                 intent.putExtra("avatar", avatar_url);
                 intent.putExtra("jwt", ctx.jwt);

@@ -21,12 +21,12 @@ public class ChangeInfoRequest extends BaseRequest{
     String saveUrl = Global.API_URL + "/account/change_info/";
     Context ctx;
 
-    public ChangeInfoRequest(String intro, Callback callback, String jwt){
+    public ChangeInfoRequest(String intro, String nickname, Callback callback, String jwt){
         super();
         this.ctx = ctx;
         try{
             addParam("intro", intro);
-            addParam("nickname", "");
+            addParam("nickname", nickname);
             post(saveUrl, callback, jwt);
         }
         catch (Exception e){

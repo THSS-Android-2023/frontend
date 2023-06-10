@@ -557,7 +557,7 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
         for (int i = 0; i < 9; i++) {
             int resID = getResources().getIdentifier("grid_" + i, "id", getPackageName());
             ImageView imageInGrid = findViewById(resID);
-            imageInGrid.setImageResource(R.drawable.null_img);
+            imageInGrid.setImageResource(R.drawable.blank_image);
         }
 
         mSharedTitle = "";

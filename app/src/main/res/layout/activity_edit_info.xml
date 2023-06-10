@@ -26,21 +26,44 @@
         android:layout_marginTop="10dp"
         android:textStyle="bold"/>
 
-    <EditText
+    <TextView
         android:id="@+id/username_edit"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/avatar_edit"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="150dp"
+        android:layout_marginBottom="10dp"
+        android:text="Chaton Xu"
+        android:textSize="20sp"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/nickname_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/username_edit"
+        android:layout_alignStart="@id/avatar_edit"
+        android:text="昵称："
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/nickname_edit"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/username_edit"
         android:layout_marginTop="0dp"
         android:layout_marginLeft="150dp"
-        android:text="Chaton Xu"
+        android:text="Dick Xu"
         android:textSize="20sp"/>
 
     <TextView
         android:id="@+id/intro_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/username_edit"
+        android:layout_below="@id/nickname_edit"
         android:layout_alignStart="@id/username_text"
         android:text="简介："
         android:textSize="20sp"
@@ -51,7 +74,7 @@
         android:id="@+id/intro_edit"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/username_edit"
+        android:layout_below="@id/nickname_edit"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="150dp"
         android:text="I am a hard-working cat."
