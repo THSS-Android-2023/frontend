@@ -119,8 +119,6 @@ public class InfoFragment extends Fragment {
                 avatar_url = jsonObject.getString("avatar");
                 followers_num = jsonObject.getInt("followers_num");
                 followings_num = jsonObject.getInt("followings_num");
-//                Log.d("followings_num", ""+followings_num);
-//                Log.d("infoFragmentAvatar", avatar_url);
                 if (avatar_url.isEmpty())
                     avatar_url = Global.EMPTY_AVATAR_URL;
                 ctx.runOnUiThread(new Runnable() {
@@ -213,6 +211,19 @@ public class InfoFragment extends Fragment {
                 Intent intent = new Intent(ctx, FollowingActivity.class);
                 intent.putExtra("jwt", ctx.jwt);
                 intent.putExtra("username", username);
+                intent.putExtra("type", 0);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+            }
+        });
+
+        follower_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ctx, FollowingActivity.class);
+                intent.putExtra("jwt", ctx.jwt);
+                intent.putExtra("username", username);
+                intent.putExtra("type", 1);
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }

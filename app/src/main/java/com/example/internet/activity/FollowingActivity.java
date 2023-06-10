@@ -38,10 +38,12 @@ public class FollowingActivity extends BaseActivity {
     RecyclerView recyclerView;
 
     private List<FollowingModel> data;
-    private FollowingListAdapter adapter;
+    public FollowingListAdapter adapter;
 
     String jwt;
     String username;
+
+    int type = 0;
 
     Callback getFollowingCallback = new Callback() {
         @Override
@@ -58,7 +60,10 @@ public class FollowingActivity extends BaseActivity {
                 data.clear();
                 for (int i = 0; i < followingList.length(); i++) {
                     JSONObject following = followingList.getJSONObject(i);
-                    data.add(new FollowingModel(following, true));
+                    if (type == 0)
+                        data.add(new FollowingModel(following, true));
+                    else
+                        data.add(new FollowingModel(following, following.getBoolean("is_following")));
                 }
                 runOnUiThread(() -> adapter.notifyDataSetChanged());
             } catch (Exception e) {
@@ -76,6 +81,7 @@ public class FollowingActivity extends BaseActivity {
 
         jwt = getIntent().getStringExtra("jwt");
         username = getIntent().getStringExtra("username");
+        type = getIntent().getIntExtra("type", 0);
         data = new ArrayList<>();
 
         adapter = new FollowingListAdapter(data, this, jwt);
@@ -94,6 +100,9 @@ public class FollowingActivity extends BaseActivity {
         });
         recyclerView.setAdapter(adapter);
 
-        new GetFollowingRequest(getFollowingCallback, jwt);
+        if (type == 0)
+            new GetFollowingRequest(getFollowingCallback, jwt);
+        else
+            new GetFollowingRequest(getFollowingCallback, jwt, -1);
     }
 }

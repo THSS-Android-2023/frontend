@@ -50,8 +50,4 @@ public class Global {
         FILTER_LIST.add("like");
         FILTER_LIST.add("comment");
     }
-
-
-
-
 }

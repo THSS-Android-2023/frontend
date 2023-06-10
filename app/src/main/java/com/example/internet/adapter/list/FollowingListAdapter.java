@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.internet.R;
+import com.example.internet.activity.FollowingActivity;
 import com.example.internet.model.FollowingModel;
 import com.example.internet.request.FollowUserRequest;
 import com.example.internet.request.UnfollowUserRequest;
@@ -59,7 +60,7 @@ public class FollowingListAdapter extends BaseListAdapter<FollowingModel>{
             color = "#E4AAEA";
         } else {
             text = "+ 关注";
-            color = "#FFC0CB";
+            color = "#cccccc";
         }
         btn.setText(text);
         btn.setBackgroundColor(Color.parseColor(color));
@@ -82,13 +83,19 @@ public class FollowingListAdapter extends BaseListAdapter<FollowingModel>{
                                 return;
                             }
                             item.following = false;
-                            ((AppCompatActivity) ctx).runOnUiThread(new Runnable() {
+                            ((FollowingActivity)ctx).runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    btn.setText("+  关注");
-                                    btn.setBackgroundColor(Color.parseColor("#cccccc"));
+                                    ((FollowingActivity)ctx).adapter.notifyDataSetChanged();
                                 }
                             });
+//                            ((AppCompatActivity) ctx).runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    btn.setText("+  关注");
+//                                    btn.setBackgroundColor(Color.parseColor("#cccccc"));
+//                                }
+//                            });
                         }
                     }, item.username, jwt);
                 } else {
@@ -106,14 +113,19 @@ public class FollowingListAdapter extends BaseListAdapter<FollowingModel>{
                                 return;
                             }
                             item.following = true;
-                            ((AppCompatActivity) ctx).runOnUiThread(new Runnable() {
+                            ((FollowingActivity)ctx).runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    btn.setText("√ 已关注");
-                                    btn.setBackgroundColor(Color.parseColor("#E4AAEA"));
+                                    ((FollowingActivity)ctx).adapter.notifyDataSetChanged();
                                 }
-
                             });
+//                            ((AppCompatActivity) ctx).runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    btn.setText("√ 已关注");
+//                                    btn.setBackgroundColor(Color.parseColor("#E4AAEA"));
+//                                }
+//                            });
                         }
                     }, item.username, jwt);
                 }
