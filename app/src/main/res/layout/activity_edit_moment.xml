@@ -16,7 +16,16 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="right">
-
+            <Button
+                android:id="@+id/btn_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
+                android:textSize="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="20dp"
+                android:clickable="true"
+                android:text="清空"/>
             <Button
                 android:id="@+id/btn_render"
                 android:layout_width="wrap_content"
@@ -106,6 +115,7 @@
             android:layout_height="wrap_content"
             android:minHeight="150dp"
             android:gravity="top|start"
+            android:visibility="gone"
             android:layout_margin="16dp" />
 
         <ImageView
@@ -132,6 +142,101 @@
                 app:show_buffering="when_playing" />
         </FrameLayout>
 
+        <GridLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/grid_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:rowCount="3"
+            android:columnCount="3"
+            android:layout_margin="16dp"
+            android:layout_gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/grid_0"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/null_img"
+                android:layout_row="0"
+                android:layout_column="0"/>
+            <ImageView
+                android:id="@+id/grid_1"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/null_img"
+                android:layout_row="0"
+                android:layout_column="1"/>
+            <ImageView
+                android:id="@+id/grid_2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/null_img"
+                android:layout_row="0"
+                android:layout_column="2"/>
+            <ImageView
+                android:id="@+id/grid_3"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/null_img"
+                android:layout_row="1"
+                android:layout_column="0"/>
+            <ImageView
+                android:id="@+id/grid_4"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/null_img"
+                android:layout_row="1"
+                android:layout_column="1"/>
+            <ImageView
+                android:id="@+id/grid_5"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/null_img"
+                android:layout_row="1"
+                android:layout_column="2"/>
+            <ImageView
+                android:id="@+id/grid_6"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/null_img"
+                android:layout_row="2"
+                android:layout_column="0"/>
+            <ImageView
+                android:id="@+id/grid_7"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/null_img"
+                android:layout_row="2"
+                android:layout_column="1"/>
+            <ImageView
+                android:id="@+id/grid_8"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/null_img"
+                android:layout_row="2"
+                android:layout_column="2"/>
+
+        </GridLayout>
+
         <com.jaeger.ninegridimageview.NineGridImageView
             android:id="@+id/iv_nine_grid"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -140,7 +245,8 @@
             android:layout_width="match_parent"
             app:imgGap="4dp"
             app:showStyle="fill"
-            app:singleImgSize="120dp"/>
+            app:singleImgSize="120dp"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

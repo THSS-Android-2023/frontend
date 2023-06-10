@@ -30,6 +30,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -116,6 +117,9 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
 
     private AlertDialog.Builder builder;
     private ImageView img;
+    private GridLayout gridLayout;
+
+    private String mediaType = "";
 
     private NineGridImageViewAdapter<String> mAdapter = new NineGridImageViewAdapter<String>() {
         @Override
@@ -159,6 +163,14 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
             @Override
             public void onClick(View view) {
                 onPublishClick();
+            }
+        });
+
+        Button clearButton = findViewById(R.id.btn_clear);
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClearClick();
             }
         });
 
@@ -211,15 +223,11 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
                 // 当用户点击确定按钮时，获取用户选择的选项
                 int selectedId = radioGroup.getCheckedRadioButtonId();
                 if (selectedId == option1.getId()) {
-                    Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    photoPickerIntent.setType("image/*");
-                    startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+                    startPickPhoto();
                     // 用户选择了选项1
                 } else if (selectedId == option2.getId()) {
                     // 用户选择了选项2
-                    Intent videoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    videoPickerIntent.setType("video/*");
-                    startActivityForResult(videoPickerIntent, SELECT_VIDEO);
+                    startPickVideo();
                 }
             }
         });
@@ -320,11 +328,17 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
 //            }
 //        });
 
+        AlertDialog dialog = builder.create();
         img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                if (mediaType.isEmpty())
+                    dialog.show();
+                else if (mediaType.equals("photo")) {
+                    startPickPhoto();
+                } else if (mediaType.equals("video")) {
+                    startPickVideo();
+                }
             }
         });
 
@@ -334,9 +348,11 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
 
         textView = findViewById(R.id.render_post_text);
 
-        nineGridImageView = findViewById(R.id.iv_nine_grid);
-        nineGridImageView.setAdapter(mAdapter);
-        nineGridImageView.setImagesData(uriList);
+//        nineGridImageView = findViewById(R.id.iv_nine_grid);
+//        nineGridImageView.setAdapter(mAdapter);
+//        nineGridImageView.setImagesData(uriList);
+
+        gridLayout = findViewById(R.id.grid_layout);
 
         playerView = findViewById(R.id.video_player);
         player = new SimpleExoPlayer.Builder(this, new DefaultRenderersFactory(this)).build();
@@ -378,6 +394,18 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
                 .createMediaSource(uri);
     }
 
+    public void startPickPhoto() {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+    }
+
+    public void startPickVideo() {
+        Intent videoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        videoPickerIntent.setType("video/*");
+        startActivityForResult(videoPickerIntent, SELECT_VIDEO);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -404,23 +432,28 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK) {
+            mediaType = "photo";
             playerView.setVisibility(View.GONE);
-            img.setVisibility(View.GONE);
+            img.setVisibility(View.VISIBLE);
+            gridLayout.setVisibility(View.VISIBLE);
             imageUri = data.getData();
             mSharedImg = imageUri.toString();
-            ImageView mImageView = findViewById(R.id.iv_post_image);
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                mImageView.setImageBitmap(bitmap);
+                int image_num = uriList.size();
+                int resID = getResources().getIdentifier("grid_" + image_num, "id", getPackageName());
+                ImageView imageInGrid = findViewById(resID);
+                imageInGrid.setImageBitmap(bitmap);
                 getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                 uriList.add(imageUri.toString());
-                nineGridImageView.setImagesData(uriList);
+//                nineGridImageView.setImagesData(uriList);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else if (requestCode == SELECT_VIDEO && resultCode == RESULT_OK) {
+            mediaType = "video";
             playerView.setVisibility(View.VISIBLE);
             img.setVisibility(View.GONE);
             videoUri = data.getData();
@@ -496,7 +529,30 @@ public class EditMomentActivity extends BaseActivity implements LocationListener
         final Node node = markwon.parse(editText.getText().toString());
         final Spanned markdown = markwon.render(node);
 
+        textView.setVisibility(View.VISIBLE);
         markwon.setParsedMarkdown(textView, markdown);
+    }
+
+    public void onClearClick() {
+        editTitle.setText("");
+        editText.setText("");
+        textView.setVisibility(View.GONE);
+        spinner.setSelectedIndex(0);
+        playerView.setVisibility(View.GONE);
+        gridLayout.setVisibility(View.GONE);
+        uriList.clear();
+        mediaType = "";
+        img.setVisibility(View.VISIBLE);
+
+        for (int i = 0; i < 9; i++) {
+            int resID = getResources().getIdentifier("grid_" + i, "id", getPackageName());
+            ImageView imageInGrid = findViewById(resID);
+            imageInGrid.setImageResource(R.drawable.null_img);
+        }
+
+        mSharedTitle = "";
+        mSharedText = "";
+        mSharedTag = Global.TAG_LIST.get(0);
     }
 
     Callback publishCallback = new Callback() {
