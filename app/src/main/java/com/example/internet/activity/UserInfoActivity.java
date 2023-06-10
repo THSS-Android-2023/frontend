@@ -368,6 +368,7 @@ public class UserInfoActivity extends BaseActivity {
                 intent.putExtra("jwt", jwt);
                 intent.putExtra("username", curUsername);
                 intent.putExtra("target", username);
+                Log.d("123", "CURUSERNAME:" + curUsername + "TARGET:" + username);
                 startActivity(intent);
                 overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
             }
