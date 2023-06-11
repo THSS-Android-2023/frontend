@@ -29,9 +29,7 @@ This project is developed by:
 
 ## Demo Video
 
-<video src="./src/demo.mp4">
-
-
+Click [here](https://github.com/THSS-Android-2023/frontend/tree/main/src/demo.mp4) to download our short demo.
 
 ## License
 
